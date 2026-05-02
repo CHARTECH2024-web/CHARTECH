@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Charles Tech | Portfolio Futuriste</title>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Space Grotesk', sans-serif;
+            transition: background 0.3s, color 0.3s;
+            scroll-behavior: smooth;
+        }
+        /* Thème sombre (par défaut) */
+        body.dark {
+            --bg-primary: #0b0c10;
+            --bg-secondary: #1f2833;
+            --text-primary: #e0e0e0;
+            --text-secondary: #c5c6c7;
+            --accent: #00a8ff;
+            --accent-glow: 0 0 12px rgba(0,168,255,0.5);
+            --card-bg: rgba(31, 40, 51, 0.7);
+            --border: 1px solid rgba(0,168,255,0.3);
+        }
+        /* Thème clair */
+        body.light {
+            --bg-primary: #f0f4f8;
+            --bg-secondary: #ffffff;
+            --text-primary: #1a2a3a;
+            --text-secondary: #2c3e50;
+            --accent: #0077b6;
+            --accent-glow: 0 0 8px rgba(0,119,182,0.3);
+            --card-bg: rgba(255,255,255,0.85);
+            --border: 1px solid rgba(0,119,182,0.2);
+        }
+        body {
+            background: var(--bg-primary);
+            color: var(--text-primary);
+        }
+        /* glassmorphisme */
+        .glass {
+            background: var(--card-bg);
+            backdrop-filter: blur(12px);
+            border: var(--border);
+            border-radius: 2rem;
+        }
+        /* Navigation */
+        .navbar {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 2rem;
+            z-index: 1000;
+            background: var(--card-bg);
+            backdrop-filter: blur(12px);
+            border-bottom: var(--border);
+        }
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #00a8ff, #00ffc3);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        .nav-links {
+            display: flex;
+            gap: 1.5rem;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        .nav-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-weight: 500;
+            transition: 0.2s;
+        }
+        .nav-links a:hover {
+            color: var(--accent);
+        }
+        .controls {
+            display: flex;
+            gap: 0.8rem;
+        }
+        .icon-btn {
+            background: none;
+            border: none;
+            font-size: 1.2rem;
+            cursor: pointer;
+            color: var(--accent);
+            padding: 0.3rem;
+            border-radius: 50%;
+            transition: 0.2s;
+        }
+        .icon-btn:hover {
+            background: var(--accent);
+            color: var(--bg-primary);
+        }
+        /* sections */
+        .container {
+            max-width: 1300px;
+            margin: 0 auto;
+            padding: 6rem 1.5rem 2rem;
+        }
+        section {
+            margin-bottom: 5rem;
+        }
+        .hero {
+            text-align: center;
+            padding: 3rem 0;
+        }
+        .hero h1 {
+            font-size: 3.5rem;
+            background: linear-gradient(135deg, var(--accent), #a5f3ff);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        .hero p {
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+            margin-top: 1rem;
+        }
+        .contact-info {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin: 2rem 0;
+            flex-wrap: wrap;
+        }
+        .contact-card {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            background: var(--card-bg);
+            padding: 0.8rem 1.5rem;
+            border-radius: 3rem;
+            border: var(--border);
+            text-decoration: none;
+            color: var(--text-primary);
+            transition: 0.2s;
+        }
+        .contact-card:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--accent-glow);
+        }
+        /* grille compétences */
+        .skills-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.8rem;
+            margin-top: 2rem;
+        }
+        .skill-card {
+            background: var(--card-bg);
+            border-radius: 1.5rem;
+            padding: 1.5rem;
+            border: var(--border);
+            transition: 0.3s;
+        }
+        .skill-card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--accent-glow);
+        }
+        .skill-icon {
+            font-size: 2.5rem;
+            color: var(--accent);
+            margin-bottom: 1rem;
+        }
+        .skill-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+        .skill-desc {
+            color: var(--text-secondary);
+            line-height: 1.5;
+        }
+        .badge {
+            display: inline-block;
+            background: var(--accent);
+            color: #fff;
+            font-size: 0.7rem;
+            padding: 0.2rem 0.6rem;
+            border-radius: 2rem;
+            margin-top: 0.8rem;
+        }
+        footer {
+            text-align: center;
+            padding: 2rem;
+            border-top: var(--border);
+            margin-top: 3rem;
+        }
+        @media (max-width: 780px) {
+            .navbar {
+                flex-direction: column;
+                gap: 0.8rem;
+                padding: 1rem;
+            }
+            .hero h1 {
+                font-size: 2.2rem;
+            }
+            .container {
+                padding-top: 8rem;
+            }
+        }
+    </style>
+</head>
+<body class="dark">
+    <nav class="navbar">
+        <div class="logo">⚡ CHARLES TECH</div>
+        <div class="nav-links">
+            <a href="#home">Accueil</a>
+            <a href="#skills">Compétences</a>
+            <a href="#contact">Contact</a>
+            <div class="controls">
+                <button class="icon-btn" id="themeToggle" aria-label="Thème"><i class="fas fa-moon"></i></button>
+                <button class="icon-btn" id="langToggle" aria-label="Langue">EN</button>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <!-- Section hero -->
+        <section id="home">
+            <div class="hero">
+                <h1 id="mainTitle">Charles, ingénieur <span class="glow">créatif</span></h1>
+                <p id="subtitle">Développement web • Aéronautique • IoT (ESP32, Raspberry Pi) • IA</p>
+                <div class="contact-info">
+                    <a href="tel:+243892959679" class="contact-card"><i class="fas fa-phone-alt"></i> <span>+243 892 959 679</span></a>
+                    <a href="mailto:charlestechnology46@gmail.com" class="contact-card"><i class="fas fa-envelope"></i> <span>charlestechnology46@gmail.com</span></a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Compétences -->
+        <section id="skills">
+            <h2 id="skillsTitle" style="font-size:2rem; margin-bottom:1rem;">⚙️ Domaines d'expertise</h2>
+            <div class="skills-grid" id="skillsGrid">
+                <!-- Les cartes seront générées dynamiquement pour le bilingue -->
+            </div>
+        </section>
+
+        <!-- Contact et footer-->
+        <section id="contact">
+            <h2 id="contactTitle" style="margin-bottom:1rem;">📬 Me contacter</h2>
+            <div class="contact-info">
+                <a href="tel:+243892959679" class="contact-card"><i class="fas fa-phone-alt"></i> +243 892 959 679</a>
+                <a href="mailto:charlestechnology46@gmail.com" class="contact-card"><i class="fas fa-envelope"></i> charlestechnology46@gmail.com</a>
+                <a href="https://github.com/" class="contact-card" target="_blank"><i class="fab fa-github"></i> GitHub</a>
+                <a href="https://wa.me/243892959679" class="contact-card" target="_blank"><i class="fab fa-whatsapp"></i> WhatsApp</a>
+            </div>
+        </section>
+    </div>
+    <footer>
+        <p id="footerText">© 2025 Charles Technology – Innovons ensemble</p>
+    </footer>
+
+    <script>
+        // Contenu bilingue des compétences
+        const skillsData = {
+            fr: [
+                { icon: "fab fa-html5", title: "HTML5 & CSS3", desc: "Sites responsives, animations, Flexbox/Grid, design moderne." },
+                { icon: "fab fa-js", title: "JavaScript (ES6+)", desc: "Interactivité, API, DOM, applications web dynamiques." },
+                { icon: "fab fa-python", title: "Python", desc: "Backend (Flask/Django), automatisation, data science." },
+                { icon: "fas fa-microchip", title: "ESP32 & Raspberry Pi", desc: "Contrôle d'objets, capteurs, home automation, IoT." },
+                { icon: "fas fa-plane", title: "Aéronautique", desc: "Conception de drones, aérodynamique, systèmes embarqués." },
+                { icon: "fas fa-globe", title: "Développement Web Fullstack", desc: "Sites vitrines, e-commerce, bases de données, hébergement." }
+            ],
+            en: [
+                { icon: "fab fa-html5", title: "HTML5 & CSS3", desc: "Responsive sites, animations, Flexbox/Grid, modern design." },
+                { icon: "fab fa-js", title: "JavaScript (ES6+)", desc: "Interactivity, APIs, DOM, dynamic web apps." },
+                { icon: "fab fa-python", title: "Python", desc: "Backend (Flask/Django), automation, data science." },
+                { icon: "fas fa-microchip", title: "ESP32 & Raspberry Pi", desc: "Object control, sensors, home automation, IoT." },
+                { icon: "fas fa-plane", title: "Aeronautics", desc: "Drone design, aerodynamics, embedded systems." },
+                { icon: "fas fa-globe", title: "Fullstack Web Dev", desc: "Showcase sites, e-commerce, databases, hosting." }
+            ]
+        };
+
+        let currentLang = 'fr';
+        let currentTheme = 'dark';
+
+        const skillsGrid = document.getElementById('skillsGrid');
+        const mainTitle = document.getElementById('mainTitle');
+        const subtitle = document.getElementById('subtitle');
+        const skillsTitle = document.getElementById('skillsTitle');
+        const contactTitle = document.getElementById('contactTitle');
+        const footerText = document.getElementById('footerText');
+
+        function renderSkills() {
+            const data = skillsData[currentLang];
+            skillsGrid.innerHTML = data.map(skill => `
+                <div class="skill-card">
+                    <div class="skill-icon"><i class="${skill.icon}"></i></div>
+                    <div class="skill-title">${skill.title}</div>
+                    <div class="skill-desc">${skill.desc}</div>
+                    <div class="badge">${currentLang === 'fr' ? 'Expert' : 'Expert'}</div>
+                </div>
+            `).join('');
+        }
+
+        function updateLanguage() {
+            if (currentLang === 'fr') {
+                mainTitle.innerHTML = 'Charles, ingénieur <span class="glow">créatif</span>';
+                subtitle.textContent = 'Développement web • Aéronautique • IoT (ESP32, Raspberry Pi) • IA';
+                skillsTitle.textContent = '⚙️ Domaines d\'expertise';
+                contactTitle.textContent = '📬 Me contacter';
+                footerText.innerHTML = '© 2025 Charles Technology – Innovons ensemble';
+                document.getElementById('langToggle').innerHTML = 'EN';
+            } else {
+                mainTitle.innerHTML = 'Charles, <span class="glow">creative</span> engineer';
+                subtitle.textContent = 'Web dev • Aeronautics • IoT (ESP32, Raspberry Pi) • AI';
+                skillsTitle.textContent = '⚙️ Areas of expertise';
+                contactTitle.textContent = '📬 Contact me';
+                footerText.innerHTML = '© 2025 Charles Technology – Innovate together';
+                document.getElementById('langToggle').innerHTML = 'FR';
+            }
+            renderSkills();
+        }
+
+        function setTheme(theme) {
+            currentTheme = theme;
+            document.body.classList.remove('dark', 'light');
+            document.body.classList.add(theme);
+            const themeIcon = document.querySelector('#themeToggle i');
+            if (theme === 'dark') {
+                themeIcon.classList.remove('fa-sun');
+                themeIcon.classList.add('fa-moon');
+            } else {
+                themeIcon.classList.remove('fa-moon');
+                themeIcon.classList.add('fa-sun');
+            }
+        }
+
+        function toggleTheme() {
+            setTheme(currentTheme === 'dark' ? 'light' : 'dark');
+        }
+
+        function toggleLang() {
+            currentLang = currentLang === 'fr' ? 'en' : 'fr';
+            updateLanguage();
+        }
+
+        // Événements
+        document.getElementById('themeToggle').addEventListener('click', toggleTheme);
+        document.getElementById('langToggle').addEventListener('click', toggleLang);
+        
+        // Initialisation
+        setTheme('dark');
+        updateLanguage();
+    </script>
+</body>
+</html>
