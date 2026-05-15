@@ -1,627 +1,904 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>Charles Tech | Portfolio Futuriste</title>
-    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <!-- Bibliothèque pour les calculs avancés (sin, cos, log, etc.) -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/10.6.4/math.min.js"></script>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        body {
-            font-family: 'Space Grotesk', sans-serif;
-            transition: background 0.3s, color 0.3s;
-            scroll-behavior: smooth;
-        }
-        /* Thème sombre (par défaut) */
-        body.dark {
-            --bg-primary: #0b0c10;
-            --bg-secondary: #1f2833;
-            --text-primary: #e0e0e0;
-            --text-secondary: #c5c6c7;
-            --accent: #00a8ff;
-            --accent-glow: 0 0 12px rgba(0,168,255,0.5);
-            --card-bg: rgba(31, 40, 51, 0.7);
-            --border: 1px solid rgba(0,168,255,0.3);
-        }
-        /* Thème clair */
-        body.light {
-            --bg-primary: #f0f4f8;
-            --bg-secondary: #ffffff;
-            --text-primary: #1a2a3a;
-            --text-secondary: #2c3e50;
-            --accent: #0077b6;
-            --accent-glow: 0 0 8px rgba(0,119,182,0.3);
-            --card-bg: rgba(255,255,255,0.85);
-            --border: 1px solid rgba(0,119,182,0.2);
-        }
-        body {
-            background: var(--bg-primary);
-            color: var(--text-primary);
-        }
-        /* glassmorphisme */
-        .glass {
-            background: var(--card-bg);
-            backdrop-filter: blur(12px);
-            border: var(--border);
-            border-radius: 2rem;
-        }
-        /* Navigation */
-        .navbar {
-            position: fixed;
-            top: 0;
-            width: 100%;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 1rem 2rem;
-            z-index: 1000;
-            background: var(--card-bg);
-            backdrop-filter: blur(12px);
-            border-bottom: var(--border);
-            flex-wrap: wrap;
-        }
-        .logo {
-            font-size: 1.5rem;
-            font-weight: 700;
-            background: linear-gradient(135deg, #00a8ff, #00ffc3);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-        }
-        .nav-links {
-            display: flex;
-            gap: 1.5rem;
-            align-items: center;
-            flex-wrap: wrap;
-        }
-        .nav-links a {
-            color: var(--text-secondary);
-            text-decoration: none;
-            font-weight: 500;
-            transition: 0.2s;
-            cursor: pointer;
-        }
-        .nav-links a:hover {
-            color: var(--accent);
-        }
-        .controls {
-            display: flex;
-            gap: 0.8rem;
-        }
-        .icon-btn {
-            background: none;
-            border: none;
-            font-size: 1.2rem;
-            cursor: pointer;
-            color: var(--accent);
-            padding: 0.3rem;
-            border-radius: 50%;
-            transition: 0.2s;
-        }
-        .icon-btn:hover {
-            background: var(--accent);
-            color: var(--bg-primary);
-        }
-        /* sections */
-        .container {
-            max-width: 1300px;
-            margin: 0 auto;
-            padding: 6rem 1.5rem 2rem;
-        }
-        section {
-            margin-bottom: 5rem;
-        }
-        .hero {
-            text-align: center;
-            padding: 3rem 0;
-        }
-        .hero h1 {
-            font-size: 3.5rem;
-            background: linear-gradient(135deg, var(--accent), #a5f3ff);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-        }
-        .hero p {
-            font-size: 1.2rem;
-            color: var(--text-secondary);
-            margin-top: 1rem;
-        }
-        .contact-info {
-            display: flex;
-            justify-content: center;
-            gap: 2rem;
-            margin: 2rem 0;
-            flex-wrap: wrap;
-        }
-        .contact-card {
-            display: flex;
-            align-items: center;
-            gap: 0.8rem;
-            background: var(--card-bg);
-            padding: 0.8rem 1.5rem;
-            border-radius: 3rem;
-            border: var(--border);
-            text-decoration: none;
-            color: var(--text-primary);
-            transition: 0.2s;
-        }
-        .contact-card:hover {
-            transform: translateY(-3px);
-            box-shadow: var(--accent-glow);
-        }
-        /* grille compétences */
-        .skills-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 1.8rem;
-            margin-top: 2rem;
-        }
-        .skill-card {
-            background: var(--card-bg);
-            border-radius: 1.5rem;
-            padding: 1.5rem;
-            border: var(--border);
-            transition: 0.3s;
-        }
-        .skill-card:hover {
-            transform: translateY(-8px);
-            box-shadow: var(--accent-glow);
-        }
-        .skill-icon {
-            font-size: 2.5rem;
-            color: var(--accent);
-            margin-bottom: 1rem;
-        }
-        .skill-title {
-            font-size: 1.5rem;
-            font-weight: 600;
-            margin-bottom: 0.5rem;
-        }
-        .skill-desc {
-            color: var(--text-secondary);
-            line-height: 1.5;
-        }
-        .badge {
-            display: inline-block;
-            background: var(--accent);
-            color: #fff;
-            font-size: 0.7rem;
-            padding: 0.2rem 0.6rem;
-            border-radius: 2rem;
-            margin-top: 0.8rem;
-        }
-        footer {
-            text-align: center;
-            padding: 2rem;
-            border-top: var(--border);
-            margin-top: 3rem;
-        }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>CHARTECH • Technologie futuriste</title>
+  <!-- Polices modernes -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <!-- Font Awesome 6 pour les icônes -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
 
-        /* ---------- CHAT IA (fenêtre flottante) ---------- */
-        .ai-floating-btn {
-            position: fixed;
-            bottom: 30px;
-            right: 30px;
-            width: 60px;
-            height: 60px;
-            background: var(--accent);
-            border-radius: 50%;
-            box-shadow: var(--accent-glow);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            z-index: 999;
-            font-size: 28px;
-            transition: transform 0.3s, box-shadow 0.3s;
-            border: none;
-            color: white;
-        }
-        .ai-floating-btn:hover {
-            transform: scale(1.1);
-            box-shadow: 0 0 25px var(--accent);
-        }
-        .ai-chat-window {
-            position: fixed;
-            bottom: 100px;
-            right: 30px;
-            width: 380px;
-            max-width: 90vw;
-            max-height: 500px;
-            background: var(--card-bg);
-            backdrop-filter: blur(15px);
-            border: var(--border);
-            border-radius: 1.5rem;
-            display: none;
-            flex-direction: column;
-            z-index: 1000;
-            overflow: hidden;
-            box-shadow: 0 0 30px rgba(0,168,255,0.3);
-        }
-        .ai-chat-window.open {
-            display: flex;
-        }
-        .ai-chat-header {
-            background: rgba(0,168,255,0.2);
-            padding: 1rem;
-            font-weight: bold;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: var(--border);
-        }
-        .ai-chat-header .ai-avatar {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-        .ai-chat-header .ai-avatar img {
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
-            background: var(--accent);
-            padding: 4px;
-            object-fit: contain;
-        }
-        .ai-chat-messages {
-            flex: 1;
-            overflow-y: auto;
-            padding: 1rem;
-            display: flex;
-            flex-direction: column;
-            gap: 0.8rem;
-            max-height: 300px;
-            background: rgba(0,0,0,0.1);
-        }
-        .ai-message {
-            padding: 0.7rem 1rem;
-            border-radius: 1.2rem;
-            max-width: 80%;
-            word-wrap: break-word;
-            font-size: 0.9rem;
-            line-height: 1.4;
-        }
-        .ai-message.user {
-            align-self: flex-end;
-            background: var(--accent);
-            color: white;
-            border-bottom-right-radius: 0.2rem;
-        }
-        .ai-message.bot {
-            align-self: flex-start;
-            background: var(--card-bg);
-            border: var(--border);
-            border-bottom-left-radius: 0.2rem;
-        }
-        .ai-chat-input {
-            display: flex;
-            padding: 0.8rem;
-            gap: 0.5rem;
-            border-top: var(--border);
-            background: rgba(0,0,0,0.2);
-        }
-        .ai-chat-input input {
-            flex: 1;
-            padding: 0.7rem 1rem;
-            background: var(--card-bg);
-            border: var(--border);
-            border-radius: 2rem;
-            color: var(--text-primary);
-            outline: none;
-            font-family: inherit;
-        }
-        .ai-chat-input button {
-            background: var(--accent);
-            border: none;
-            width: 42px;
-            height: 42px;
-            border-radius: 50%;
-            cursor: pointer;
-            font-size: 1.1rem;
-            color: white;
-            box-shadow: var(--accent-glow);
-            transition: 0.2s;
-        }
-        .ai-chat-input button:hover {
-            background: #00ccff;
-        }
-        @media (max-width: 780px) {
-            .navbar {
-                flex-direction: column;
-                gap: 0.8rem;
-                padding: 1rem;
-            }
-            .hero h1 {
-                font-size: 2.2rem;
-            }
-            .container {
-                padding-top: 8rem;
-            }
-            .ai-chat-window {
-                width: 90%;
-                right: 5%;
-            }
-            .ai-floating-btn {
-                bottom: 20px;
-                right: 20px;
-            }
-        }
-    </style>
+    body {
+      font-family: 'Space Grotesk', sans-serif;
+      background: #050510;
+      color: #e0e0e0;
+      overflow-x: hidden;
+      scroll-behavior: smooth;
+    }
+
+    /* Canvas de particules */
+    #particles-canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    /* Navigation */
+    .navbar {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      background: rgba(8, 8, 24, 0.7);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-bottom: 1px solid rgba(0, 255, 255, 0.2);
+      z-index: 1000;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 5%;
+      height: 70px;
+      transition: 0.3s;
+    }
+
+    .logo {
+      font-size: 1.8rem;
+      font-weight: 700;
+      background: linear-gradient(135deg, #00f0ff, #bf40ff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      letter-spacing: 2px;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 2rem;
+      list-style: none;
+    }
+
+    .nav-links a {
+      color: #ccc;
+      text-decoration: none;
+      font-weight: 500;
+      transition: 0.3s;
+      position: relative;
+    }
+
+    .nav-links a:hover {
+      color: #00f0ff;
+    }
+
+    .nav-links a::after {
+      content: '';
+      position: absolute;
+      bottom: -5px;
+      left: 0;
+      width: 0%;
+      height: 2px;
+      background: #00f0ff;
+      transition: 0.3s;
+    }
+
+    .nav-links a:hover::after {
+      width: 100%;
+    }
+
+    .menu-toggle {
+      display: none;
+      font-size: 1.8rem;
+      color: #fff;
+      cursor: pointer;
+    }
+
+    /* Sections communes */
+    .section {
+      position: relative;
+      z-index: 1;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 100px 5% 50px;
+    }
+
+    .container {
+      max-width: 1200px;
+      width: 100%;
+      margin: 0 auto;
+    }
+
+    h2 {
+      font-size: 2.8rem;
+      margin-bottom: 2rem;
+      background: linear-gradient(to right, #00f0ff, #bf40ff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      text-align: center;
+    }
+
+    /* Hero */
+    .hero-content {
+      text-align: center;
+    }
+
+    .hero-content h1 {
+      font-size: 5rem;
+      font-weight: 700;
+      background: linear-gradient(135deg, #00f0ff, #bf40ff, #00f0ff);
+      background-size: 200% auto;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      animation: gradientShift 3s linear infinite;
+      margin-bottom: 1rem;
+    }
+
+    @keyframes gradientShift {
+      0% { background-position: 0% center; }
+      100% { background-position: 200% center; }
+    }
+
+    .hero-content p {
+      font-size: 1.5rem;
+      color: #aaa;
+      max-width: 700px;
+      margin: 0 auto 2rem;
+    }
+
+    .btn {
+      display: inline-block;
+      padding: 12px 30px;
+      background: transparent;
+      border: 1px solid #00f0ff;
+      color: #00f0ff;
+      border-radius: 30px;
+      font-weight: 600;
+      text-decoration: none;
+      transition: 0.3s;
+      margin: 0 10px;
+    }
+
+    .btn:hover {
+      background: #00f0ff;
+      color: #000;
+      box-shadow: 0 0 25px #00f0ff;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #00f0ff, #bf40ff);
+      border: none;
+      color: #000;
+      font-weight: 600;
+    }
+
+    .btn-primary:hover {
+      box-shadow: 0 0 30px #bf40ff;
+    }
+
+    /* About */
+    .about-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 3rem;
+      align-items: center;
+    }
+
+    .about-text p {
+      font-size: 1.1rem;
+      line-height: 1.8;
+      color: #bbb;
+      margin-bottom: 1rem;
+    }
+
+    .about-image {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(0, 255, 255, 0.2);
+      border-radius: 20px;
+      padding: 2rem;
+      text-align: center;
+      backdrop-filter: blur(5px);
+    }
+
+    .about-image i {
+      font-size: 8rem;
+      background: linear-gradient(135deg, #00f0ff, #bf40ff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    /* Skills */
+    .skills-container {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+      margin-top: 2rem;
+    }
+
+    .skill-card {
+      background: rgba(255,255,255,0.03);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(0, 255, 255, 0.25);
+      border-radius: 20px;
+      padding: 2rem;
+      transition: 0.3s;
+    }
+
+    .skill-card:hover {
+      transform: translateY(-5px);
+      border-color: #00f0ff;
+      box-shadow: 0 0 30px rgba(0, 240, 255, 0.2);
+    }
+
+    .skill-card h3 {
+      font-size: 1.8rem;
+      margin-bottom: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: #fff;
+    }
+
+    .skill-card h3 i {
+      color: #00f0ff;
+    }
+
+    .skill-list {
+      list-style: none;
+    }
+
+    .skill-list li {
+      margin: 12px 0;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 1.1rem;
+    }
+
+    .skill-list li i {
+      color: #bf40ff;
+      font-size: 0.9rem;
+    }
+
+    /* Contact */
+    .contact-options {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 2rem;
+      margin-top: 2rem;
+    }
+
+    .contact-item {
+      background: rgba(255,255,255,0.03);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 20px;
+      padding: 2rem;
+      text-align: center;
+      width: 280px;
+      transition: 0.3s;
+    }
+
+    .contact-item:hover {
+      border-color: #00f0ff;
+      box-shadow: 0 0 25px rgba(0, 240, 255, 0.2);
+    }
+
+    .contact-item i {
+      font-size: 2.5rem;
+      background: linear-gradient(135deg, #00f0ff, #bf40ff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 1rem;
+    }
+
+    .contact-item p {
+      color: #aaa;
+      margin: 10px 0;
+      font-size: 1rem;
+      word-break: break-word;
+    }
+
+    .contact-item a {
+      color: #00f0ff;
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    /* Admin overlay */
+    .admin-overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.9);
+      backdrop-filter: blur(15px);
+      z-index: 2000;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .admin-panel {
+      background: #0a0a1a;
+      border: 1px solid #00f0ff;
+      border-radius: 20px;
+      padding: 2rem;
+      width: 90%;
+      max-width: 600px;
+      max-height: 80vh;
+      overflow-y: auto;
+    }
+
+    .admin-panel h2 {
+      text-align: left;
+      margin-bottom: 1.5rem;
+    }
+
+    .admin-field {
+      margin-bottom: 1.5rem;
+    }
+
+    .admin-field label {
+      display: block;
+      margin-bottom: 0.5rem;
+      color: #00f0ff;
+    }
+
+    .admin-field input, .admin-field textarea {
+      width: 100%;
+      padding: 12px;
+      background: #111;
+      border: 1px solid #333;
+      border-radius: 10px;
+      color: #fff;
+      font-family: inherit;
+    }
+
+    .admin-actions {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 1rem;
+    }
+
+    .admin-actions button {
+      padding: 10px 25px;
+      border: none;
+      border-radius: 25px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .btn-save {
+      background: #00f0ff;
+      color: #000;
+    }
+
+    .btn-logout {
+      background: transparent;
+      border: 1px solid #ff4d4d;
+      color: #ff4d4d;
+    }
+
+    /* Chatbot */
+    .chatbot-toggle {
+      position: fixed;
+      bottom: 30px;
+      right: 30px;
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #00f0ff, #bf40ff);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: #000;
+      font-size: 1.5rem;
+      cursor: pointer;
+      z-index: 1500;
+      box-shadow: 0 0 25px rgba(0, 240, 255, 0.4);
+      transition: 0.3s;
+    }
+
+    .chatbot-window {
+      display: none;
+      position: fixed;
+      bottom: 100px;
+      right: 30px;
+      width: 350px;
+      height: 500px;
+      background: #0a0a1a;
+      border: 1px solid #00f0ff;
+      border-radius: 20px;
+      z-index: 1500;
+      flex-direction: column;
+      box-shadow: 0 0 40px rgba(0, 240, 255, 0.3);
+      overflow: hidden;
+    }
+
+    .chat-header {
+      background: rgba(0, 240, 255, 0.1);
+      padding: 15px;
+      font-weight: bold;
+      border-bottom: 1px solid #00f0ff;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .chat-messages {
+      flex: 1;
+      padding: 15px;
+      overflow-y: auto;
+    }
+
+    .chat-messages .msg {
+      margin-bottom: 15px;
+      display: flex;
+    }
+
+    .chat-messages .user {
+      justify-content: flex-end;
+    }
+
+    .chat-messages .bot {
+      justify-content: flex-start;
+    }
+
+    .chat-messages .msg span {
+      max-width: 80%;
+      padding: 10px 15px;
+      border-radius: 20px;
+      font-size: 0.9rem;
+    }
+
+    .user span {
+      background: #00f0ff;
+      color: #000;
+    }
+
+    .bot span {
+      background: #1a1a2e;
+      border: 1px solid #333;
+      color: #fff;
+    }
+
+    .chat-input {
+      display: flex;
+      padding: 10px;
+      border-top: 1px solid #333;
+    }
+
+    .chat-input input {
+      flex: 1;
+      padding: 10px;
+      background: #111;
+      border: 1px solid #333;
+      border-radius: 20px;
+      color: #fff;
+      outline: none;
+    }
+
+    .chat-input button {
+      background: #00f0ff;
+      border: none;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      margin-left: 10px;
+      cursor: pointer;
+      color: #000;
+      font-size: 1.2rem;
+    }
+
+    /* Footer */
+    footer {
+      text-align: center;
+      padding: 2rem;
+      border-top: 1px solid rgba(255,255,255,0.05);
+      position: relative;
+      z-index: 1;
+      color: #555;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .nav-links {
+        display: none;
+        flex-direction: column;
+        background: rgba(0,0,0,0.95);
+        position: absolute;
+        top: 70px;
+        left: 0;
+        width: 100%;
+        padding: 2rem;
+      }
+      .nav-links.active {
+        display: flex;
+      }
+      .menu-toggle {
+        display: block;
+      }
+      .about-grid, .skills-container {
+        grid-template-columns: 1fr;
+      }
+      .hero-content h1 {
+        font-size: 3rem;
+      }
+    }
+  </style>
 </head>
-<body class="dark">
-    <nav class="navbar">
-        <div class="logo">⚡ CHARLES TECH</div>
-        <div class="nav-links">
-            <a href="#home">Accueil</a>
-            <a href="#skills">Compétences</a>
-            <a href="#contact">Contact</a>
-            <a id="iaNavLink" style="cursor:pointer;">🧠 IA</a>
-            <div class="controls">
-                <button class="icon-btn" id="themeToggle" aria-label="Thème"><i class="fas fa-moon"></i></button>
-                <button class="icon-btn" id="langToggle" aria-label="Langue">EN</button>
-            </div>
-        </div>
-    </nav>
+<body>
+  <!-- Particules -->
+  <canvas id="particles-canvas"></canvas>
 
-    <!-- Bouton flottant IA -->
-    <button class="ai-floating-btn" id="aiFloatingBtn" aria-label="Assistant IA">🤖</button>
-
-    <!-- Fenêtre de chat IA -->
-    <div class="ai-chat-window" id="aiChatWindow">
-        <div class="ai-chat-header">
-            <div class="ai-avatar">
-                <!-- Image robot stylisée (SVG inline) -->
-                <svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <circle cx="18" cy="18" r="18" fill="var(--accent)" opacity="0.2"/>
-                    <rect x="10" y="12" width="3" height="3" rx="1" fill="var(--accent)"/>
-                    <rect x="23" y="12" width="3" height="3" rx="1" fill="var(--accent)"/>
-                    <path d="M12 22h12" stroke="var(--accent)" stroke-width="2" stroke-linecap="round"/>
-                    <circle cx="18" cy="24" r="1.5" fill="var(--accent)"/>
-                </svg>
-                <span>CHARLES IA</span>
-            </div>
-            <button id="closeAiChat" style="background:none; border:none; color:var(--text-primary); font-size:1.3rem; cursor:pointer;">✕</button>
-        </div>
-        <div class="ai-chat-messages" id="aiChatMessages">
-            <div class="ai-message bot">
-                <span id="welcomeMsg">Bonjour, je suis CHARLES IA, développée par CHARTECH. Je peux calculer pour vous ou répondre à vos questions. Essayez une expression comme <em>sin(45 deg) + log(100)</em>.</span>
-            </div>
-        </div>
-        <div class="ai-chat-input">
-            <input type="text" id="aiInput" placeholder="Votre question ou calcul..." />
-            <button id="aiSendBtn"><i class="fas fa-paper-plane"></i></button>
-        </div>
+  <!-- Navigation -->
+  <nav class="navbar">
+    <div class="logo">CHARTECH</div>
+    <div class="menu-toggle" id="mobile-menu">
+      <i class="fas fa-bars"></i>
     </div>
+    <ul class="nav-links" id="nav-links">
+      <li><a href="#home">Accueil</a></li>
+      <li><a href="#about">À propos</a></li>
+      <li><a href="#skills">Compétences</a></li>
+      <li><a href="#contact">Contact</a></li>
+      <li><a href="#" id="admin-link">Admin</a></li>
+    </ul>
+  </nav>
 
+  <!-- Hero -->
+  <section class="section" id="home">
+    <div class="hero-content">
+      <h1>CHARTECH</h1>
+      <p>L'intelligence logicielle rencontre la puissance électrique. Des solutions innovantes, du code à l'installation.</p>
+      <div>
+        <a href="#about" class="btn btn-primary">Découvrir</a>
+        <a href="#contact" class="btn">Me contacter</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- About / Profil -->
+  <section class="section" id="about">
     <div class="container">
-        <!-- Section hero -->
-        <section id="home">
-            <div class="hero">
-                <h1 id="mainTitle">Charles, ingénieur <span class="glow">créatif</span></h1>
-                <p id="subtitle">Développement web • Aéronautique • IoT (ESP32, Raspberry Pi) • IA</p>
-                <div class="contact-info">
-                    <a href="tel:+243892959679" class="contact-card"><i class="fas fa-phone-alt"></i> <span>+243 892 959 679</span></a>
-                    <a href="mailto:charlestechnology46@gmail.com" class="contact-card"><i class="fas fa-envelope"></i> <span>charlestechnology46@gmail.com</span></a>
-                </div>
-            </div>
-        </section>
-
-        <!-- Compétences -->
-        <section id="skills">
-            <h2 id="skillsTitle" style="font-size:2rem; margin-bottom:1rem;">⚙️ Domaines d'expertise</h2>
-            <div class="skills-grid" id="skillsGrid">
-                <!-- Les cartes seront générées dynamiquement pour le bilingue -->
-            </div>
-        </section>
-
-        <!-- Contact et footer-->
-        <section id="contact">
-            <h2 id="contactTitle" style="margin-bottom:1rem;">📬 Me contacter</h2>
-            <div class="contact-info">
-                <a href="tel:+243892959679" class="contact-card"><i class="fas fa-phone-alt"></i> +243 892 959 679</a>
-                <a href="mailto:charlestechnology46@gmail.com" class="contact-card"><i class="fas fa-envelope"></i> charlestechnology46@gmail.com</a>
-                <a href="https://github.com/" class="contact-card" target="_blank"><i class="fab fa-github"></i> GitHub</a>
-                <a href="https://wa.me/243892959679" class="contact-card" target="_blank"><i class="fab fa-whatsapp"></i> WhatsApp</a>
-            </div>
-        </section>
+      <h2>Profil Professionnel</h2>
+      <div class="about-grid">
+        <div class="about-text" id="about-text-content">
+          <p>Je suis un développeur et technicien électricien dédié à la construction de solutions innovantes axées sur la technologie. À travers mon initiative <strong>CHARTECH</strong>, je vise à combler le fossé entre l'intelligence logicielle et l'efficacité industrielle. Avec une solide formation en programmation et en génie électrique, je développe des systèmes non seulement intelligents mais aussi physiquement robustes.</p>
+          <p>Passionné par la cybersécurité et l'intelligence artificielle, j'élargis activement mon expertise pour construire des systèmes sécurisés et autonomes pour l'avenir.</p>
+        </div>
+        <div class="about-image">
+          <i class="fas fa-microchip"></i>
+          <p style="color:#aaa; margin-top:1rem;">Software & Électricité</p>
+        </div>
+      </div>
     </div>
-    <footer>
-        <p id="footerText">© 2025 Charles Technology – Innovons ensemble</p>
-    </footer>
+  </section>
 
-    <script>
-        // --- Gestion multilingue et thème (existant) ---
-        const skillsData = {
-            fr: [
-                { icon: "fab fa-html5", title: "HTML5 & CSS3", desc: "Sites responsives, animations, Flexbox/Grid, design moderne." },
-                { icon: "fab fa-js", title: "JavaScript (ES6+)", desc: "Interactivité, API, DOM, applications web dynamiques." },
-                { icon: "fab fa-python", title: "Python", desc: "Backend (Flask/Django), automatisation, data science." },
-                { icon: "fas fa-microchip", title: "ESP32 & Raspberry Pi", desc: "Contrôle d'objets, capteurs, home automation, IoT." },
-                { icon: "fas fa-plane", title: "Aéronautique", desc: "Conception de drones, aérodynamique, systèmes embarqués." },
-                { icon: "fas fa-globe", title: "Développement Web Fullstack", desc: "Sites vitrines, e-commerce, bases de données, hébergement." }
+  <!-- Compétences -->
+  <section class="section" id="skills">
+    <div class="container">
+      <h2>Compétences Techniques</h2>
+      <div class="skills-container">
+        <div class="skill-card">
+          <h3><i class="fas fa-code"></i> Développement Logiciel</h3>
+          <ul class="skill-list">
+            <li><i class="fas fa-check-circle"></i> <strong>Python</strong> – Automatisation, data, scripts</li>
+            <li><i class="fas fa-check-circle"></i> <strong>JavaScript</strong> – Frontend & interactivité</li>
+            <li><i class="fas fa-check-circle"></i> <strong>C++ (Arduino)</strong> – Systèmes embarqués</li>
+            <li><i class="fas fa-check-circle"></i> <strong>HTML5 / CSS3</strong> – Interfaces responsives</li>
+          </ul>
+        </div>
+        <div class="skill-card">
+          <h3><i class="fas fa-bolt"></i> Génie Électrique</h3>
+          <ul class="skill-list">
+            <li><i class="fas fa-check-circle"></i> <strong>Électricité domestique</strong> – Installation, maintenance</li>
+            <li><i class="fas fa-check-circle"></i> <strong>Électricité industrielle</strong> – Conception de circuits</li>
+            <li><i class="fas fa-check-circle"></i> <strong>Schémas et câblage</strong> – Lecture et réalisation</li>
+            <li><i class="fas fa-check-circle"></i> <strong>Sécurité électrique</strong> – Normes et diagnostics</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Contact -->
+  <section class="section" id="contact">
+    <div class="container">
+      <h2>Me Contacter</h2>
+      <p style="text-align:center; color:#aaa; margin-bottom:2rem;">Toujours ouvert aux nouveaux projets, collaborations industrielles ou innovations techniques.</p>
+      <div class="contact-options">
+        <div class="contact-item">
+          <i class="fas fa-envelope"></i>
+          <p><strong>Email</strong></p>
+          <p><a href="mailto:charlestechnology46@gmail.com">charlestechnology46@gmail.com</a></p>
+        </div>
+        <div class="contact-item">
+          <i class="fas fa-phone-alt"></i>
+          <p><strong>Téléphone</strong></p>
+          <p><a href="tel:+243892959679">+243 892 959 679</a></p>
+        </div>
+        <div class="contact-item">
+          <i class="fab fa-whatsapp"></i>
+          <p><strong>WhatsApp</strong></p>
+          <p><a href="https://wa.me/243892959679" target="_blank">Discuter maintenant</a></p>
+        </div>
+        <div class="contact-item">
+          <i class="fab fa-github"></i>
+          <p><strong>GitHub</strong></p>
+          <p><a href="#" target="_blank">Voir mes projets</a></p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <p>&copy; 2025 CHARTECH. Tous droits réservés. Design futuriste.</p>
+  </footer>
+
+  <!-- Admin Overlay -->
+  <div class="admin-overlay" id="admin-overlay">
+    <div class="admin-panel">
+      <h2><i class="fas fa-lock"></i> Administration CHARTECH</h2>
+      <div class="admin-field">
+        <label>Titre Hero</label>
+        <input type="text" id="edit-hero-title" placeholder="CHARTECH">
+      </div>
+      <div class="admin-field">
+        <label>Texte À propos</label>
+        <textarea id="edit-about-text" rows="5" placeholder="Modifier le profil..."></textarea>
+      </div>
+      <div class="admin-actions">
+        <button class="btn-save" id="save-changes">Enregistrer</button>
+        <button class="btn-logout" id="logout-admin">Déconnexion</button>
+      </div>
+      <p style="color:#666; font-size:0.8rem; margin-top:1rem;">Modifications sauvegardées localement.</p>
+    </div>
+  </div>
+
+  <!-- Chatbot -->
+  <div class="chatbot-toggle" id="chatbot-toggle">
+    <i class="fas fa-robot"></i>
+  </div>
+  <div class="chatbot-window" id="chatbot-window">
+    <div class="chat-header">
+      <span>CHARTECH IA</span>
+      <i class="fas fa-times" id="close-chat" style="cursor:pointer;"></i>
+    </div>
+    <div class="chat-messages" id="chat-messages">
+      <div class="msg bot"><span>Bonjour ! Je suis l'assistant virtuel de CHARTECH. Comment puis-je vous aider ?</span></div>
+    </div>
+    <div class="chat-input">
+      <input type="text" id="user-input" placeholder="Votre message...">
+      <button id="send-message"><i class="fas fa-paper-plane"></i></button>
+    </div>
+  </div>
+
+  <script>
+    // --- PARTICULES ANIMÉES (fond réseau) ---
+    const canvas = document.getElementById('particles-canvas');
+    const ctx = canvas.getContext('2d');
+    let particles = [];
+    const maxParticles = 80;
+    const connectionDist = 120;
+
+    function resizeCanvas() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
+
+    class Particle {
+      constructor() {
+        this.x = Math.random() * canvas.width;
+        this.y = Math.random() * canvas.height;
+        this.vx = (Math.random() - 0.5) * 0.5;
+        this.vy = (Math.random() - 0.5) * 0.5;
+      }
+      update() {
+        this.x += this.vx;
+        this.y += this.vy;
+        if (this.x < 0 || this.x > canvas.width) this.vx *= -1;
+        if (this.y < 0 || this.y > canvas.height) this.vy *= -1;
+      }
+      draw() {
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, 2, 0, Math.PI * 2);
+        ctx.fillStyle = '#00f0ff';
+        ctx.fill();
+      }
+    }
+
+    for (let i = 0; i < maxParticles; i++) {
+      particles.push(new Particle());
+    }
+
+    function animateParticles() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      for (let i = 0; i < particles.length; i++) {
+        particles[i].update();
+        particles[i].draw();
+        for (let j = i + 1; j < particles.length; j++) {
+          const dx = particles[i].x - particles[j].x;
+          const dy = particles[i].y - particles[j].y;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+          if (dist < connectionDist) {
+            ctx.beginPath();
+            ctx.moveTo(particles[i].x, particles[i].y);
+            ctx.lineTo(particles[j].x, particles[j].y);
+            ctx.strokeStyle = `rgba(0, 240, 255, ${1 - dist / connectionDist})`;
+            ctx.lineWidth = 0.5;
+            ctx.stroke();
+          }
+        }
+      }
+      requestAnimationFrame(animateParticles);
+    }
+    animateParticles();
+
+    // --- MENU MOBILE ---
+    const mobileMenu = document.getElementById('mobile-menu');
+    const navLinks = document.getElementById('nav-links');
+    mobileMenu.addEventListener('click', () => {
+      navLinks.classList.toggle('active');
+    });
+
+    // --- ADMIN ---
+    const adminLink = document.getElementById('admin-link');
+    const adminOverlay = document.getElementById('admin-overlay');
+    const logoutAdmin = document.getElementById('logout-admin');
+    const saveChanges = document.getElementById('save-changes');
+    const editHeroTitle = document.getElementById('edit-hero-title');
+    const editAboutText = document.getElementById('edit-about-text');
+    const aboutTextContent = document.getElementById('about-text-content');
+    const heroTitle = document.querySelector('.hero-content h1');
+
+    // Simule une vérification de mot de passe (simple)
+    adminLink.addEventListener('click', (e) => {
+      e.preventDefault();
+      const password = prompt('Mot de passe administrateur :');
+      if (password === 'admin123') {  // Change ce mot de passe
+        // Charger les valeurs sauvegardées ou actuelles
+        const savedHero = localStorage.getItem('chartech_hero') || heroTitle.innerText;
+        const savedAbout = localStorage.getItem('chartech_about') || aboutTextContent.innerHTML;
+        editHeroTitle.value = savedHero;
+        editAboutText.value = savedAbout;
+        adminOverlay.style.display = 'flex';
+        navLinks.classList.remove('active');
+      } else {
+        alert('Accès refusé.');
+      }
+    });
+
+    logoutAdmin.addEventListener('click', () => {
+      adminOverlay.style.display = 'none';
+    });
+
+    saveChanges.addEventListener('click', () => {
+      const newHero = editHeroTitle.value.trim() || 'CHARTECH';
+      const newAbout = editAboutText.value.trim() || aboutTextContent.innerHTML;
+      heroTitle.innerText = newHero;
+      aboutTextContent.innerHTML = newAbout;
+      localStorage.setItem('chartech_hero', newHero);
+      localStorage.setItem('chartech_about', newAbout);
+      adminOverlay.style.display = 'none';
+      alert('Modifications enregistrées avec succès !');
+    });
+
+    // Fermer l'overlay admin en cliquant à l'extérieur
+    adminOverlay.addEventListener('click', (e) => {
+      if (e.target === adminOverlay) adminOverlay.style.display = 'none';
+    });
+
+    // --- CHATBOT IA ---
+    const chatbotToggle = document.getElementById('chatbot-toggle');
+    const chatbotWindow = document.getElementById('chatbot-window');
+    const closeChat = document.getElementById('close-chat');
+    const chatMessages = document.getElementById('chat-messages');
+    const userInput = document.getElementById('user-input');
+    const sendBtn = document.getElementById('send-message');
+
+    chatbotToggle.addEventListener('click', () => {
+      chatbotWindow.style.display = 'flex';
+    });
+    closeChat.addEventListener('click', () => {
+      chatbotWindow.style.display = 'none';
+    });
+
+    function addMessage(text, sender) {
+      const div = document.createElement('div');
+      div.className = `msg ${sender}`;
+      const span = document.createElement('span');
+      span.textContent = text;
+      div.appendChild(span);
+      chatMessages.appendChild(div);
+      chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+
+    async function getAIResponse(userMessage) {
+      // Remplace 'TA_CLE_API' par ta véritable clé OpenAI
+      const API_KEY = 'TA_CLE_API'; 
+      if (API_KEY === 'TA_CLE_API') {
+        // Mode démo si pas de clé
+        const demoResponses = [
+          "Je suis l'assistant virtuel CHARTECH. Pour activer l'IA réelle, ajoute ta clé API OpenAI dans le code.",
+          "CHARTECH propose des solutions logicielles et électriques. Comment puis-je t'aider ?",
+          "Intéressant ! Contacte-moi via l'email pour plus d'infos."
+        ];
+        return demoResponses[Math.floor(Math.random() * demoResponses.length)];
+      }
+
+      try {
+        const response = await fetch('https://api.openai.com/v1/chat/completions', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${API_KEY}`
+          },
+          body: JSON.stringify({
+            model: 'gpt-3.5-turbo',
+            messages: [
+              { role: 'system', content: 'Tu es un assistant utile pour CHARTECH, une entreprise technologique.' },
+              { role: 'user', content: userMessage }
             ],
-            en: [
-                { icon: "fab fa-html5", title: "HTML5 & CSS3", desc: "Responsive sites, animations, Flexbox/Grid, modern design." },
-                { icon: "fab fa-js", title: "JavaScript (ES6+)", desc: "Interactivity, APIs, DOM, dynamic web apps." },
-                { icon: "fab fa-python", title: "Python", desc: "Backend (Flask/Django), automation, data science." },
-                { icon: "fas fa-microchip", title: "ESP32 & Raspberry Pi", desc: "Object control, sensors, home automation, IoT." },
-                { icon: "fas fa-plane", title: "Aeronautics", desc: "Drone design, aerodynamics, embedded systems." },
-                { icon: "fas fa-globe", title: "Fullstack Web Dev", desc: "Showcase sites, e-commerce, databases, hosting." }
-            ]
-        };
-
-        let currentLang = 'fr';
-        let currentTheme = 'dark';
-
-        const skillsGrid = document.getElementById('skillsGrid');
-        const mainTitle = document.getElementById('mainTitle');
-        const subtitle = document.getElementById('subtitle');
-        const skillsTitle = document.getElementById('skillsTitle');
-        const contactTitle = document.getElementById('contactTitle');
-        const footerText = document.getElementById('footerText');
-
-        function renderSkills() {
-            const data = skillsData[currentLang];
-            skillsGrid.innerHTML = data.map(skill => `
-                <div class="skill-card">
-                    <div class="skill-icon"><i class="${skill.icon}"></i></div>
-                    <div class="skill-title">${skill.title}</div>
-                    <div class="skill-desc">${skill.desc}</div>
-                    <div class="badge">Expert</div>
-                </div>
-            `).join('');
-        }
-
-        function updateLanguage() {
-            if (currentLang === 'fr') {
-                mainTitle.innerHTML = 'Charles, ingénieur <span class="glow">créatif</span>';
-                subtitle.textContent = 'Développement web • Aéronautique • IoT (ESP32, Raspberry Pi) • IA';
-                skillsTitle.textContent = '⚙️ Domaines d\'expertise';
-                contactTitle.textContent = '📬 Me contacter';
-                footerText.innerHTML = '© 2025 Charles Technology – Innovons ensemble';
-                document.getElementById('langToggle').innerHTML = 'EN';
-                document.getElementById('welcomeMsg').innerHTML = 'Bonjour, je suis CHARLES IA, développée par CHARTECH. Je peux calculer pour vous ou répondre à vos questions. Essayez une expression comme <em>sin(45 deg) + log(100)</em>.';
-            } else {
-                mainTitle.innerHTML = 'Charles, <span class="glow">creative</span> engineer';
-                subtitle.textContent = 'Web dev • Aeronautics • IoT (ESP32, Raspberry Pi) • AI';
-                skillsTitle.textContent = '⚙️ Areas of expertise';
-                contactTitle.textContent = '📬 Contact me';
-                footerText.innerHTML = '© 2025 Charles Technology – Innovate together';
-                document.getElementById('langToggle').innerHTML = 'FR';
-                document.getElementById('welcomeMsg').innerHTML = 'Hello, I am CHARLES AI, developed by CHARTECH. I can calculate for you or answer questions. Try an expression like <em>sin(45 deg) + log(100)</em>.';
-            }
-            renderSkills();
-            // Mise à jour des messages déjà affichés ? Non, on garde l'historique mais le prochain message de l'IA utilisera la langue.
-        }
-
-        function setTheme(theme) {
-            currentTheme = theme;
-            document.body.classList.remove('dark', 'light');
-            document.body.classList.add(theme);
-            const themeIcon = document.querySelector('#themeToggle i');
-            if (theme === 'dark') {
-                themeIcon.classList.remove('fa-sun');
-                themeIcon.classList.add('fa-moon');
-            } else {
-                themeIcon.classList.remove('fa-moon');
-                themeIcon.classList.add('fa-sun');
-            }
-        }
-
-        function toggleTheme() {
-            setTheme(currentTheme === 'dark' ? 'light' : 'dark');
-        }
-
-        function toggleLang() {
-            currentLang = currentLang === 'fr' ? 'en' : 'fr';
-            updateLanguage();
-        }
-
-        document.getElementById('themeToggle').addEventListener('click', toggleTheme);
-        document.getElementById('langToggle').addEventListener('click', toggleLang);
-
-        // --- Gestion de l'IA (chatbot) ---
-        const aiButton = document.getElementById('aiFloatingBtn');
-        const aiChatWindow = document.getElementById('aiChatWindow');
-        const closeAiChat = document.getElementById('closeAiChat');
-        const aiInput = document.getElementById('aiInput');
-        const aiSendBtn = document.getElementById('aiSendBtn');
-        const aiChatMessages = document.getElementById('aiChatMessages');
-        const iaNavLink = document.getElementById('iaNavLink');
-
-        // Ouvrir/fermer le chat
-        function openChat() {
-            aiChatWindow.classList.add('open');
-        }
-        function closeChat() {
-            aiChatWindow.classList.remove('open');
-        }
-        aiButton.addEventListener('click', () => {
-            aiChatWindow.classList.toggle('open');
+            max_tokens: 150
+          })
         });
-        closeAiChat.addEventListener('click', closeChat);
-        iaNavLink.addEventListener('click', openChat);
+        const data = await response.json();
+        return data.choices[0].message.content.trim();
+      } catch (error) {
+        return "Désolé, une erreur est survenue. Vérifie ta connexion ou ta clé API.";
+      }
+    }
 
-        // Ajouter un message
-        function addAiMessage(text, sender) {
-            const div = document.createElement('div');
-            div.className = `ai-message ${sender}`;
-            div.innerHTML = text; // on autorise les balises simples (em, etc.)
-            aiChatMessages.appendChild(div);
-            aiChatMessages.scrollTop = aiChatMessages.scrollHeight;
+    async function sendMessage() {
+      const message = userInput.value.trim();
+      if (!message) return;
+      addMessage(message, 'user');
+      userInput.value = '';
+      const botReply = await getAIResponse(message);
+      addMessage(botReply, 'bot');
+    }
+
+    sendBtn.addEventListener('click', sendMessage);
+    userInput.addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') sendMessage();
+    });
+
+    // --- Défilement fluide pour les ancres (sauf admin) ---
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function(e) {
+        const targetId = this.getAttribute('href');
+        if (targetId === '#') return;
+        const target = document.querySelector(targetId);
+        if (target) {
+          e.preventDefault();
+          target.scrollIntoView({ behavior: 'smooth' });
+          navLinks.classList.remove('active');
         }
-
-        // Fonction de réponse de l'IA (calculatrice + conversation)
-        function generateResponse(input) {
-            const lang = currentLang;
-            const lower = input.toLowerCase().trim();
-
-            // Salutations / identité
-            if (lower.includes('qui es-tu') || lower.includes('qui êtes vous') || lower.includes('ton nom') || lower.includes('identité')) {
-                return lang === 'fr' 
-                    ? "Je suis CHARLES IA, un assistant intelligent développé par CHARTECH. Je suis encore en phase d'apprentissage, mais je peux déjà effectuer des calculs mathématiques complexes. Bientôt, je serai encore plus puissant grâce à Python et PyTorch !"
-                    : "I am CHARLES AI, an intelligent assistant developed by CHARTECH. I am still learning, but I can already perform complex mathematical calculations. Soon I will be even more powerful with Python and PyTorch!";
-            }
-            if (lower.includes('bonjour') || lower.includes('salut') || lower.includes('hello') || lower.includes('hi')) {
-                return lang === 'fr' ? "Bonjour ! Que puis-je calculer pour vous aujourd'hui ?" : "Hello! What can I calculate for you today?";
-            }
-            if (lower.includes('comment ça va') || lower.includes('how are you')) {
-                return lang === 'fr' ? "Je vais bien, merci ! Prêt à résoudre vos équations." : "I'm fine, thank you! Ready to solve your equations.";
-            }
-            if (lower.includes('merci') || lower.includes('thank')) {
-                return lang === 'fr' ? "Avec plaisir ! N'hésitez pas à me poser d'autres questions." : "You're welcome! Feel free to ask me more questions.";
-            }
-
-            // Tentative de calcul mathématique avec math.js
-            try {
-                // On nettoie la chaîne : remplacer les virgules par des points pour les décimales
-                let expr = input.replace(/,/g, '.');
-                // Supprimer les caractères non autorisés (sécurité)
-                // On autorise les chiffres, opérateurs, fonctions mathématiques connues, espaces, parenthèses
-                const allowedPattern = /[0-9+\-*/().%\s]|sin|cos|tan|log|ln|sqrt|abs|pi|e|exp|asin|acos|atan|atan2|pow|round|floor|ceil|deg|rad/g;
-                // Vérification grossière : si la chaîne contient autre chose que des maths, on risque une erreur.
-                if (!/^[\d\s+\-*/().,%a-z]+$/i.test(expr)) {
-                    throw new Error('invalid');
-                }
-                const result = math.evaluate(expr);
-                // Formater le résultat
-                const formatted = math.format(result, { precision: 10 });
-                return lang === 'fr' ? `Résultat : ${formatted}` : `Result: ${formatted}`;
-            } catch (e) {
-                // Si ce n'est pas un calcul, message par défaut
-                return lang === 'fr'
-                    ? "Je n'ai pas compris. Je suis encore en développement, mais je peux calculer des expressions comme <code>sin(30 deg) + sqrt(16)</code>."
-                    : "I didn't understand. I'm still in development, but I can calculate expressions like <code>sin(30 deg) + sqrt(16)</code>.";
-            }
-        }
-
-        function sendAiMessage() {
-            const text = aiInput.value.trim();
-            if (!text) return;
-            addAiMessage(text, 'user');
-            aiInput.value = '';
-            const response = generateResponse(text);
-            setTimeout(() => {
-                addAiMessage(response, 'bot');
-            }, 400);
-        }
-
-        aiSendBtn.addEventListener('click', sendAiMessage);
-        aiInput.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') sendAiMessage();
-        });
-
-        // Initialisation
-        setTheme('dark');
-        updateLanguage();
-    </script>
+      });
+    });
+  </script>
 </body>
 </html>
