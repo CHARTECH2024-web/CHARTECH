@@ -1,14 +1,13 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-  <title>CHARTECH • Technologie futuriste</title>
-  <!-- Polices modernes -->
+  <title>CHARTECH | Hacker · Maker · AI</title>
+  <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-  <!-- Font Awesome 6 pour les icônes -->
+  <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
   <style>
     * {
@@ -16,888 +15,838 @@
       padding: 0;
       box-sizing: border-box;
     }
-
-    body {
-      font-family: 'Space Grotesk', sans-serif;
-      background: #050510;
-      color: #e0e0e0;
-      overflow-x: hidden;
-      scroll-behavior: smooth;
+    :root {
+      --bg: #050505;
+      --surface: #0f0f0f;
+      --neon: #00ff66;
+      --neon2: #00ccff;
+      --text: #cccccc;
+      --mono: 'Share Tech Mono', monospace;
+      --sans: 'Inter', sans-serif;
     }
-
-    /* Canvas de particules */
-    #particles-canvas {
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--sans);
+      scroll-behavior: smooth;
+      overflow-x: hidden;
+    }
+    canvas#matrix {
       position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
+      top: 0; left: 0;
+      width: 100vw; height: 100vh;
       z-index: 0;
+      opacity: 0.08;
       pointer-events: none;
     }
-
-    /* Navigation */
     .navbar {
       position: fixed;
-      top: 0;
-      width: 100%;
-      background: rgba(8, 8, 24, 0.7);
+      top: 0; width: 100%;
+      background: rgba(5,5,5,0.8);
       backdrop-filter: blur(20px);
       -webkit-backdrop-filter: blur(20px);
-      border-bottom: 1px solid rgba(0, 255, 255, 0.2);
+      border-bottom: 1px solid rgba(0,255,100,0.2);
       z-index: 1000;
       display: flex;
       justify-content: space-between;
       align-items: center;
       padding: 0 5%;
       height: 70px;
-      transition: 0.3s;
+      font-family: var(--mono);
     }
-
     .logo {
       font-size: 1.8rem;
       font-weight: 700;
-      background: linear-gradient(135deg, #00f0ff, #bf40ff);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-      letter-spacing: 2px;
+      color: var(--neon);
+      text-shadow: 0 0 15px var(--neon);
+      letter-spacing: 3px;
     }
-
     .nav-links {
       display: flex;
       gap: 2rem;
       list-style: none;
     }
-
     .nav-links a {
-      color: #ccc;
+      color: #aaa;
       text-decoration: none;
-      font-weight: 500;
+      font-size: 0.9rem;
+      text-transform: uppercase;
+      letter-spacing: 2px;
       transition: 0.3s;
-      position: relative;
     }
-
     .nav-links a:hover {
-      color: #00f0ff;
+      color: var(--neon);
+      text-shadow: 0 0 8px var(--neon);
     }
-
-    .nav-links a::after {
-      content: '';
-      position: absolute;
-      bottom: -5px;
-      left: 0;
-      width: 0%;
-      height: 2px;
-      background: #00f0ff;
-      transition: 0.3s;
-    }
-
-    .nav-links a:hover::after {
-      width: 100%;
-    }
-
     .menu-toggle {
       display: none;
-      font-size: 1.8rem;
-      color: #fff;
+      font-size: 1.6rem;
+      color: var(--neon);
       cursor: pointer;
     }
-
-    /* Sections communes */
-    .section {
+    .container {
+      position: relative;
+      z-index: 2;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 25px;
+    }
+    section {
       position: relative;
       z-index: 1;
+      padding: 100px 0;
       min-height: 100vh;
       display: flex;
-      flex-direction: column;
-      justify-content: center;
       align-items: center;
-      padding: 100px 5% 50px;
     }
-
-    .container {
-      max-width: 1200px;
-      width: 100%;
-      margin: 0 auto;
-    }
-
     h2 {
-      font-size: 2.8rem;
+      font-family: var(--mono);
+      font-size: 2.5rem;
       margin-bottom: 2rem;
-      background: linear-gradient(to right, #00f0ff, #bf40ff);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-      text-align: center;
+      color: var(--neon);
+      text-shadow: 0 0 20px rgba(0,255,100,0.8);
+      display: inline-block;
     }
-
-    /* Hero */
+    h2::after {
+      content: '_';
+      animation: blink 1s step-end infinite;
+    }
+    @keyframes blink {
+      0%,100%{opacity:1;} 50%{opacity:0;}
+    }
     .hero-content {
       text-align: center;
+      max-width: 800px;
+      margin: 0 auto;
     }
-
-    .hero-content h1 {
-      font-size: 5rem;
+    .glitch {
+      font-family: var(--mono);
+      font-size: 5.5rem;
       font-weight: 700;
-      background: linear-gradient(135deg, #00f0ff, #bf40ff, #00f0ff);
-      background-size: 200% auto;
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-      animation: gradientShift 3s linear infinite;
-      margin-bottom: 1rem;
+      color: var(--neon);
+      text-shadow: 0 0 20px var(--neon);
+      position: relative;
+      display: inline-block;
+      animation: glitch 2s infinite;
     }
-
-    @keyframes gradientShift {
-      0% { background-position: 0% center; }
-      100% { background-position: 200% center; }
+    @keyframes glitch {
+      0%{transform:translate(0)} 
+      20%{transform:translate(-3px,3px)} 
+      40%{transform:translate(-3px,-3px)} 
+      60%{transform:translate(3px,3px)} 
+      80%{transform:translate(3px,-3px)} 
+      100%{transform:translate(0)}
     }
-
-    .hero-content p {
-      font-size: 1.5rem;
-      color: #aaa;
-      max-width: 700px;
-      margin: 0 auto 2rem;
+    .glitch::before,
+    .glitch::after {
+      content: 'CHARTECH';
+      position: absolute;
+      top:0; left:0;
+      width:100%; height:100%;
+      opacity: 0.8;
     }
-
+    .glitch::before {
+      color: #0ff;
+      z-index: -1;
+      animation: glitch 1.5s infinite;
+    }
+    .glitch::after {
+      color: #f0f;
+      z-index: -2;
+      animation: glitch 2s infinite reverse;
+    }
+    .typing-text {
+      font-family: var(--mono);
+      font-size: 1.2rem;
+      color: var(--neon2);
+      margin: 1.5rem 0;
+      min-height: 1.8em;
+    }
+    .cursor { animation: blink 1s infinite; font-weight: bold; }
     .btn {
       display: inline-block;
       padding: 12px 30px;
-      background: transparent;
-      border: 1px solid #00f0ff;
-      color: #00f0ff;
-      border-radius: 30px;
-      font-weight: 600;
+      border: 1px solid var(--neon);
+      color: var(--neon);
       text-decoration: none;
+      font-family: var(--mono);
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      border-radius: 4px;
       transition: 0.3s;
       margin: 0 10px;
-    }
-
-    .btn:hover {
-      background: #00f0ff;
-      color: #000;
-      box-shadow: 0 0 25px #00f0ff;
-    }
-
-    .btn-primary {
-      background: linear-gradient(135deg, #00f0ff, #bf40ff);
-      border: none;
-      color: #000;
-      font-weight: 600;
-    }
-
-    .btn-primary:hover {
-      box-shadow: 0 0 30px #bf40ff;
-    }
-
-    /* About */
-    .about-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 3rem;
-      align-items: center;
-    }
-
-    .about-text p {
-      font-size: 1.1rem;
-      line-height: 1.8;
-      color: #bbb;
-      margin-bottom: 1rem;
-    }
-
-    .about-image {
-      background: rgba(255,255,255,0.03);
-      border: 1px solid rgba(0, 255, 255, 0.2);
-      border-radius: 20px;
-      padding: 2rem;
-      text-align: center;
-      backdrop-filter: blur(5px);
-    }
-
-    .about-image i {
-      font-size: 8rem;
-      background: linear-gradient(135deg, #00f0ff, #bf40ff);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-    }
-
-    /* Skills */
-    .skills-container {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 2rem;
-      margin-top: 2rem;
-    }
-
-    .skill-card {
-      background: rgba(255,255,255,0.03);
-      backdrop-filter: blur(10px);
-      border: 1px solid rgba(0, 255, 255, 0.25);
-      border-radius: 20px;
-      padding: 2rem;
-      transition: 0.3s;
-    }
-
-    .skill-card:hover {
-      transform: translateY(-5px);
-      border-color: #00f0ff;
-      box-shadow: 0 0 30px rgba(0, 240, 255, 0.2);
-    }
-
-    .skill-card h3 {
-      font-size: 1.8rem;
-      margin-bottom: 1.5rem;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      color: #fff;
-    }
-
-    .skill-card h3 i {
-      color: #00f0ff;
-    }
-
-    .skill-list {
-      list-style: none;
-    }
-
-    .skill-list li {
-      margin: 12px 0;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      font-size: 1.1rem;
-    }
-
-    .skill-list li i {
-      color: #bf40ff;
-      font-size: 0.9rem;
-    }
-
-    /* Contact */
-    .contact-options {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 2rem;
-      margin-top: 2rem;
-    }
-
-    .contact-item {
-      background: rgba(255,255,255,0.03);
-      backdrop-filter: blur(10px);
-      border: 1px solid rgba(255,255,255,0.1);
-      border-radius: 20px;
-      padding: 2rem;
-      text-align: center;
-      width: 280px;
-      transition: 0.3s;
-    }
-
-    .contact-item:hover {
-      border-color: #00f0ff;
-      box-shadow: 0 0 25px rgba(0, 240, 255, 0.2);
-    }
-
-    .contact-item i {
-      font-size: 2.5rem;
-      background: linear-gradient(135deg, #00f0ff, #bf40ff);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-      margin-bottom: 1rem;
-    }
-
-    .contact-item p {
-      color: #aaa;
-      margin: 10px 0;
-      font-size: 1rem;
-      word-break: break-word;
-    }
-
-    .contact-item a {
-      color: #00f0ff;
-      text-decoration: none;
-      font-weight: 600;
-    }
-
-    /* Admin overlay */
-    .admin-overlay {
-      display: none;
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0,0,0,0.9);
-      backdrop-filter: blur(15px);
-      z-index: 2000;
-      justify-content: center;
-      align-items: center;
-    }
-
-    .admin-panel {
-      background: #0a0a1a;
-      border: 1px solid #00f0ff;
-      border-radius: 20px;
-      padding: 2rem;
-      width: 90%;
-      max-width: 600px;
-      max-height: 80vh;
-      overflow-y: auto;
-    }
-
-    .admin-panel h2 {
-      text-align: left;
-      margin-bottom: 1.5rem;
-    }
-
-    .admin-field {
-      margin-bottom: 1.5rem;
-    }
-
-    .admin-field label {
-      display: block;
-      margin-bottom: 0.5rem;
-      color: #00f0ff;
-    }
-
-    .admin-field input, .admin-field textarea {
-      width: 100%;
-      padding: 12px;
-      background: #111;
-      border: 1px solid #333;
-      border-radius: 10px;
-      color: #fff;
-      font-family: inherit;
-    }
-
-    .admin-actions {
-      display: flex;
-      justify-content: space-between;
-      margin-top: 1rem;
-    }
-
-    .admin-actions button {
-      padding: 10px 25px;
-      border: none;
-      border-radius: 25px;
-      font-weight: bold;
+      background: transparent;
       cursor: pointer;
     }
-
-    .btn-save {
-      background: #00f0ff;
-      color: #000;
+    .btn:hover { background: var(--neon); color: #000; box-shadow: 0 0 25px var(--neon); }
+    .btn-primary { background: var(--neon); color: #000; border: none; font-weight: bold; }
+    .btn-primary:hover { box-shadow: 0 0 35px var(--neon); }
+    .about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; align-items: center; }
+    .about-text p { font-size: 1.1rem; line-height: 1.8; margin-bottom: 1.5rem; color: #bbb; }
+    .about-text strong { color: var(--neon); font-weight: 600; }
+    .about-image { text-align: center; }
+    .about-image .profile-img {
+      width: 260px;
+      height: 260px;
+      border-radius: 50%;
+      border: 3px solid var(--neon);
+      box-shadow: 0 0 30px rgba(0,255,100,0.5);
+      object-fit: cover;
+      background: #111;
     }
-
-    .btn-logout {
-      background: transparent;
-      border: 1px solid #ff4d4d;
-      color: #ff4d4d;
+    .skills-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 2rem; }
+    .skill-card {
+      background: rgba(0,255,100,0.03);
+      border: 1px solid rgba(0,255,100,0.2);
+      border-radius: 20px;
+      padding: 2rem;
+      backdrop-filter: blur(10px);
+      transition: 0.3s;
     }
-
-    /* Chatbot */
-    .chatbot-toggle {
+    .skill-card:hover { border-color: var(--neon); box-shadow: 0 0 30px rgba(0,255,100,0.3); transform: translateY(-5px); }
+    .skill-card h3 {
+      font-family: var(--mono);
+      color: var(--neon);
+      margin-bottom: 1.2rem;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 1.5rem;
+    }
+    .skill-list { list-style: none; }
+    .skill-list li {
+      padding: 8px 0;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 1rem;
+    }
+    .skill-list li i { color: var(--neon2); font-size: 0.9rem; }
+    .skill-list li img.logo-icon {
+      width: 24px; height: 24px; object-fit: contain; margin-right: 8px; vertical-align: middle;
+    }
+    .gallery-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.5rem; margin-top: 2rem; }
+    .gallery-item {
+      aspect-ratio: 1 / 1;
+      background: rgba(255,255,255,0.03);
+      border: 1px dashed rgba(0,255,100,0.5);
+      border-radius: 15px;
+      overflow: hidden;
+      transition: 0.3s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--neon);
+      font-family: var(--mono);
+      position: relative;
+    }
+    .gallery-item img { width: 100%; height: 100%; object-fit: cover; transition: 0.4s; }
+    .gallery-item:hover { border-color: var(--neon); box-shadow: 0 0 25px rgba(0,255,100,0.4); transform: scale(1.02); }
+    .project-card {
+      background: rgba(0,0,0,0.5);
+      border: 1px solid rgba(0,255,100,0.3);
+      border-radius: 20px;
+      padding: 2rem;
+      display: flex;
+      gap: 2rem;
+      align-items: center;
+      backdrop-filter: blur(10px);
+      margin-top: 1rem;
+    }
+    .project-icon { font-size: 4rem; color: var(--neon); min-width: 80px; text-align: center; }
+    .contact-flex { display: flex; flex-wrap: wrap; justify-content: center; gap: 2rem; }
+    .contact-item {
+      background: rgba(255,255,255,0.02);
+      border: 1px solid rgba(0,255,100,0.2);
+      border-radius: 20px;
+      padding: 2rem;
+      text-align: center;
+      width: 250px;
+      backdrop-filter: blur(5px);
+      transition: 0.3s;
+    }
+    .contact-item:hover { border-color: var(--neon); box-shadow: 0 0 30px rgba(0,255,100,0.3); }
+    .contact-item i, .contact-item .social-icon { font-size: 2.2rem; color: var(--neon); margin-bottom: 1rem; }
+    .contact-item a { color: var(--neon2); text-decoration: none; font-weight: bold; }
+    .terminal-toggle {
       position: fixed;
       bottom: 30px;
       right: 30px;
       width: 60px;
       height: 60px;
       border-radius: 50%;
-      background: linear-gradient(135deg, #00f0ff, #bf40ff);
+      background: #0a0a0a;
+      border: 2px solid var(--neon);
+      color: var(--neon);
       display: flex;
-      justify-content: center;
       align-items: center;
-      color: #000;
-      font-size: 1.5rem;
+      justify-content: center;
+      font-size: 1.8rem;
       cursor: pointer;
       z-index: 1500;
-      box-shadow: 0 0 25px rgba(0, 240, 255, 0.4);
-      transition: 0.3s;
+      box-shadow: 0 0 25px var(--neon);
     }
-
-    .chatbot-window {
+    .terminal-window {
       display: none;
       position: fixed;
       bottom: 100px;
       right: 30px;
-      width: 350px;
+      width: 380px;
       height: 500px;
-      background: #0a0a1a;
-      border: 1px solid #00f0ff;
-      border-radius: 20px;
+      background: #050505;
+      border: 1px solid var(--neon);
+      border-radius: 15px;
       z-index: 1500;
       flex-direction: column;
-      box-shadow: 0 0 40px rgba(0, 240, 255, 0.3);
+      font-family: var(--mono);
+      box-shadow: 0 0 35px rgba(0,255,100,0.5);
       overflow: hidden;
     }
-
-    .chat-header {
-      background: rgba(0, 240, 255, 0.1);
-      padding: 15px;
-      font-weight: bold;
-      border-bottom: 1px solid #00f0ff;
+    .term-header {
+      background: #0f0f0f;
+      padding: 12px;
+      border-bottom: 1px solid var(--neon);
       display: flex;
       justify-content: space-between;
+      color: var(--neon);
     }
-
-    .chat-messages {
+    .term-messages { flex: 1; padding: 15px; overflow-y: auto; font-size: 0.9rem; }
+    .term-messages .line { margin-bottom: 10px; }
+    .term-messages .user { color: var(--neon); }
+    .term-messages .bot { color: #aaa; }
+    .term-input { display: flex; border-top: 1px solid #222; }
+    .term-input input {
       flex: 1;
-      padding: 15px;
-      overflow-y: auto;
-    }
-
-    .chat-messages .msg {
-      margin-bottom: 15px;
-      display: flex;
-    }
-
-    .chat-messages .user {
-      justify-content: flex-end;
-    }
-
-    .chat-messages .bot {
-      justify-content: flex-start;
-    }
-
-    .chat-messages .msg span {
-      max-width: 80%;
-      padding: 10px 15px;
-      border-radius: 20px;
-      font-size: 0.9rem;
-    }
-
-    .user span {
-      background: #00f0ff;
-      color: #000;
-    }
-
-    .bot span {
-      background: #1a1a2e;
-      border: 1px solid #333;
-      color: #fff;
-    }
-
-    .chat-input {
-      display: flex;
-      padding: 10px;
-      border-top: 1px solid #333;
-    }
-
-    .chat-input input {
-      flex: 1;
-      padding: 10px;
-      background: #111;
-      border: 1px solid #333;
-      border-radius: 20px;
-      color: #fff;
+      background: #000;
+      border: none;
+      padding: 14px;
+      color: var(--neon);
+      font-family: var(--mono);
       outline: none;
     }
-
-    .chat-input button {
-      background: #00f0ff;
+    .term-input button {
+      background: transparent;
       border: none;
-      border-radius: 50%;
-      width: 40px;
-      height: 40px;
-      margin-left: 10px;
+      color: var(--neon);
+      padding: 0 18px;
       cursor: pointer;
-      color: #000;
       font-size: 1.2rem;
     }
-
-    /* Footer */
-    footer {
-      text-align: center;
-      padding: 2rem;
-      border-top: 1px solid rgba(255,255,255,0.05);
-      position: relative;
-      z-index: 1;
-      color: #555;
+    .admin-overlay {
+      display: none;
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0,0,0,0.95);
+      backdrop-filter: blur(25px);
+      z-index: 2000;
+      justify-content: center;
+      align-items: center;
     }
+    .admin-panel {
+      background: #0a0a0a;
+      border: 1px solid var(--neon);
+      padding: 2rem;
+      border-radius: 15px;
+      width: 90%;
+      max-width: 500px;
+    }
+    .admin-panel h3 { font-family: var(--mono); color: var(--neon); margin-bottom: 1rem; }
+    .admin-field { margin-bottom: 1.2rem; }
+    .admin-field label { display: block; color: var(--neon2); margin-bottom: 5px; }
+    .admin-field input, .admin-field textarea {
+      width: 100%;
+      padding: 10px;
+      background: #000;
+      border: 1px solid #333;
+      color: #fff;
+      font-family: var(--mono);
+      border-radius: 5px;
+    }
+    .btn-save { background: var(--neon); color: #000; border: none; padding: 10px 28px; font-family: var(--mono); cursor: pointer; font-weight: bold; }
+    .btn-logout { background: transparent; border: 1px solid #ff3333; color: #ff3333; padding: 10px 28px; font-family: var(--mono); margin-left: 10px; cursor: pointer; }
+    footer { text-align: center; padding: 2rem; border-top: 1px solid rgba(0,255,100,0.15); font-family: var(--mono); color: #555; position: relative; z-index: 1; }
 
-    /* Responsive */
+    /* custom social icons */
+    .social-icon-svg { width: 2.2rem; height: 2.2rem; margin-bottom: 1rem; fill: var(--neon); }
     @media (max-width: 768px) {
-      .nav-links {
-        display: none;
-        flex-direction: column;
-        background: rgba(0,0,0,0.95);
-        position: absolute;
-        top: 70px;
-        left: 0;
-        width: 100%;
-        padding: 2rem;
-      }
-      .nav-links.active {
-        display: flex;
-      }
-      .menu-toggle {
-        display: block;
-      }
-      .about-grid, .skills-container {
-        grid-template-columns: 1fr;
-      }
-      .hero-content h1 {
-        font-size: 3rem;
-      }
+      .about-grid { grid-template-columns: 1fr; }
+      .project-card { flex-direction: column; }
+      .nav-links { display: none; flex-direction: column; background: #000; position: absolute; top:70px; left:0; width:100%; padding:1rem; }
+      .nav-links.active { display: flex; }
+      .menu-toggle { display: block; }
+      .glitch { font-size: 3rem; }
+      .about-image .profile-img { width: 180px; height: 180px; }
     }
   </style>
 </head>
 <body>
-  <!-- Particules -->
-  <canvas id="particles-canvas"></canvas>
+  <canvas id="matrix"></canvas>
 
   <!-- Navigation -->
   <nav class="navbar">
-    <div class="logo">CHARTECH</div>
-    <div class="menu-toggle" id="mobile-menu">
-      <i class="fas fa-bars"></i>
-    </div>
+    <div class="logo">> CHARTECH</div>
+    <div class="menu-toggle" id="mobile-menu"><i class="fas fa-bars"></i></div>
     <ul class="nav-links" id="nav-links">
-      <li><a href="#home">Accueil</a></li>
-      <li><a href="#about">À propos</a></li>
-      <li><a href="#skills">Compétences</a></li>
+      <li><a href="#home">Home</a></li>
+      <li><a href="#about">About</a></li>
+      <li><a href="#skills">Skills</a></li>
+      <li><a href="#gallery">Photos</a></li>
+      <li><a href="#projects">Projects</a></li>
       <li><a href="#contact">Contact</a></li>
-      <li><a href="#" id="admin-link">Admin</a></li>
+      <li><a href="#" id="admin-link">[Admin]</a></li>
     </ul>
   </nav>
 
   <!-- Hero -->
-  <section class="section" id="home">
-    <div class="hero-content">
-      <h1>CHARTECH</h1>
-      <p>L'intelligence logicielle rencontre la puissance électrique. Des solutions innovantes, du code à l'installation.</p>
-      <div>
-        <a href="#about" class="btn btn-primary">Découvrir</a>
-        <a href="#contact" class="btn">Me contacter</a>
+  <section id="home">
+    <div class="container hero-content">
+      <h1 class="glitch">CHARTECH</h1>
+      <div class="typing-text" id="typing-text"></div>
+      <div style="margin-top:1rem;">
+        <a href="#about" class="btn btn-primary">ENTER</a>
+        <a href="#contact" class="btn">HACK ME</a>
       </div>
     </div>
   </section>
 
-  <!-- About / Profil -->
-  <section class="section" id="about">
+  <!-- About + Profile Image -->
+  <section id="about">
     <div class="container">
-      <h2>Profil Professionnel</h2>
+      <h2>// WHOAMI</h2>
       <div class="about-grid">
         <div class="about-text" id="about-text-content">
-          <p>Je suis un développeur et technicien électricien dédié à la construction de solutions innovantes axées sur la technologie. À travers mon initiative <strong>CHARTECH</strong>, je vise à combler le fossé entre l'intelligence logicielle et l'efficacité industrielle. Avec une solide formation en programmation et en génie électrique, je développe des systèmes non seulement intelligents mais aussi physiquement robustes.</p>
-          <p>Passionné par la cybersécurité et l'intelligence artificielle, j'élargis activement mon expertise pour construire des systèmes sécurisés et autonomes pour l'avenir.</p>
+          <p>I'm a <strong>hacker, maker & AI developer</strong> who lives at the brutal intersection of <strong>hardware and software</strong>. Cybersecurity, artificial intelligence, electronics, and drones – I break, model, code, and assemble complete systems from scratch.</p>
+          <p>On the digital side, I write clean <strong>Python</strong> for automation and AI, create full‑stack apps with <strong>JavaScript</strong>, and craft pixel‑perfect interfaces with <strong>HTML5 & CSS3</strong>. I also train and integrate <strong>machine learning models</strong> into real‑world tools.</p>
+          <p>On the physical side, I design <strong>3D parts in FreeCAD</strong>, prototype circuits with <strong>Arduino / C++</strong>, handle <strong>domestic & industrial electrical installations</strong>, and I'm building my own <strong>FPV drone</strong> – frame, wiring, firmware, everything.</p>
+          <p>I don't just talk about tech – I solder it, compile it, and fly it. <strong>Show me a problem, I'll show you a working prototype.</strong></p>
         </div>
         <div class="about-image">
-          <i class="fas fa-microchip"></i>
-          <p style="color:#aaa; margin-top:1rem;">Software & Électricité</p>
+          <!-- ★ REPLACE WITH YOUR REAL PROFILE PHOTO -->
+          <img src="https://via.placeholder.com/300x300/111/00ff66?text=YOUR+PHOTO" alt="CHARTECH hacker portrait" class="profile-img">
         </div>
       </div>
     </div>
   </section>
 
-  <!-- Compétences -->
-  <section class="section" id="skills">
+  <!-- Skills (with FreeCAD logo) -->
+  <section id="skills">
     <div class="container">
-      <h2>Compétences Techniques</h2>
-      <div class="skills-container">
+      <h2>// SKILLSET</h2>
+      <div class="skills-grid">
         <div class="skill-card">
-          <h3><i class="fas fa-code"></i> Développement Logiciel</h3>
+          <h3><i class="fas fa-brain"></i> AI & Programming</h3>
           <ul class="skill-list">
-            <li><i class="fas fa-check-circle"></i> <strong>Python</strong> – Automatisation, data, scripts</li>
-            <li><i class="fas fa-check-circle"></i> <strong>JavaScript</strong> – Frontend & interactivité</li>
-            <li><i class="fas fa-check-circle"></i> <strong>C++ (Arduino)</strong> – Systèmes embarqués</li>
-            <li><i class="fas fa-check-circle"></i> <strong>HTML5 / CSS3</strong> – Interfaces responsives</li>
+            <li><i class="fas fa-chevron-right"></i> Python (data, automation, AI)</li>
+            <li><i class="fas fa-chevron-right"></i> Machine learning model integration</li>
+            <li><i class="fas fa-chevron-right"></i> JavaScript (full‑stack, APIs)</li>
+            <li><i class="fas fa-chevron-right"></i> HTML5 / CSS3 (responsive, modern UI)</li>
           </ul>
         </div>
         <div class="skill-card">
-          <h3><i class="fas fa-bolt"></i> Génie Électrique</h3>
+          <h3><i class="fas fa-microchip"></i> Hardware & Electronics</h3>
           <ul class="skill-list">
-            <li><i class="fas fa-check-circle"></i> <strong>Électricité domestique</strong> – Installation, maintenance</li>
-            <li><i class="fas fa-check-circle"></i> <strong>Électricité industrielle</strong> – Conception de circuits</li>
-            <li><i class="fas fa-check-circle"></i> <strong>Schémas et câblage</strong> – Lecture et réalisation</li>
-            <li><i class="fas fa-check-circle"></i> <strong>Sécurité électrique</strong> – Normes et diagnostics</li>
+            <li><i class="fas fa-chevron-right"></i> Arduino / C++ (embedded systems)</li>
+            <li><i class="fas fa-chevron-right"></i> Circuit design & electrical wiring</li>
+            <li>
+              <img src="https://via.placeholder.com/24/00ff66/000?text=FC" alt="FreeCAD logo" class="logo-icon">
+              FreeCAD – 3D modelling & mechanical design
+            </li>
+            <li><i class="fas fa-chevron-right"></i> Drone building (frame, motors, ESCs, FC)</li>
+          </ul>
+        </div>
+        <div class="skill-card">
+          <h3><i class="fas fa-shield-virus"></i> Cybersecurity</h3>
+          <ul class="skill-list">
+            <li><i class="fas fa-chevron-right"></i> Network & system security fundamentals</li>
+            <li><i class="fas fa-chevron-right"></i> Penetration testing basics</li>
+            <li><i class="fas fa-chevron-right"></i> Secure code review</li>
+            <li><i class="fas fa-chevron-right"></i> OSINT & reconnaissance</li>
+          </ul>
+        </div>
+        <div class="skill-card">
+          <h3><i class="fas fa-bolt"></i> Electrical Engineering</h3>
+          <ul class="skill-list">
+            <li><i class="fas fa-chevron-right"></i> Domestic electrical installations</li>
+            <li><i class="fas fa-chevron-right"></i> Industrial electricity & schematics</li>
+            <li><i class="fas fa-chevron-right"></i> Troubleshooting & safety norms</li>
+            <li><i class="fas fa-chevron-right"></i> Power distribution & cabling</li>
           </ul>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- Contact -->
-  <section class="section" id="contact">
+  <!-- Gallery (replace with your photos) -->
+  <section id="gallery">
     <div class="container">
-      <h2>Me Contacter</h2>
-      <p style="text-align:center; color:#aaa; margin-bottom:2rem;">Toujours ouvert aux nouveaux projets, collaborations industrielles ou innovations techniques.</p>
-      <div class="contact-options">
+      <h2>// GALLERY</h2>
+      <p style="color:#aaa; margin-bottom:1rem; font-family:var(--mono);">Drop your own images here – projects, workbench, drones, electronics.</p>
+      <div class="gallery-grid">
+        <div class="gallery-item">
+          <img src="https://via.placeholder.com/400/0a0a0a/00ff66?text=Drone+Project" alt="Drone project">
+        </div>
+        <div class="gallery-item">
+          <img src="https://via.placeholder.com/400/0a0a0a/00ff66?text=Arduino+Circuit" alt="Arduino circuit">
+        </div>
+        <div class="gallery-item">
+          <img src="https://via.placeholder.com/400/0a0a0a/00ff66?text=3D+Model+FreeCAD" alt="3D model">
+        </div>
+        <div class="gallery-item">
+          <img src="https://via.placeholder.com/400/0a0a0a/00ff66?text=Electrical+Panel" alt="Electrical work">
+        </div>
+        <div class="gallery-item">
+          <img src="https://via.placeholder.com/400/0a0a0a/00ff66?text=AI+Coding" alt="AI coding">
+        </div>
+        <div class="gallery-item">
+          <img src="https://via.placeholder.com/400/0a0a0a/00ff66?text=Hacker+Setup" alt="Hacker setup">
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Projects -->
+  <section id="projects">
+    <div class="container">
+      <h2>// ACTIVE PROJECT</h2>
+      <div class="project-card">
+        <div class="project-icon"><i class="fas fa-drone"></i></div>
+        <div class="project-info">
+          <h3>Custom FPV Drone</h3>
+          <p>Self‑designed frame (FreeCAD), custom wiring, Arduino‑based flight controller, real‑time video. Status: <span style="color:var(--neon);">BUILDING</span></p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Contact (now with LinkedIn & Truth Social) -->
+  <section id="contact">
+    <div class="container">
+      <h2>// CONTACT</h2>
+      <div class="contact-flex">
         <div class="contact-item">
           <i class="fas fa-envelope"></i>
           <p><strong>Email</strong></p>
-          <p><a href="mailto:charlestechnology46@gmail.com">charlestechnology46@gmail.com</a></p>
-        </div>
-        <div class="contact-item">
-          <i class="fas fa-phone-alt"></i>
-          <p><strong>Téléphone</strong></p>
-          <p><a href="tel:+243892959679">+243 892 959 679</a></p>
+          <a href="mailto:charlestechnology46@gmail.com">charlestechnology46@gmail.com</a>
         </div>
         <div class="contact-item">
           <i class="fab fa-whatsapp"></i>
           <p><strong>WhatsApp</strong></p>
-          <p><a href="https://wa.me/243892959679" target="_blank">Discuter maintenant</a></p>
+          <a href="https://wa.me/243892959679" target="_blank">Message Direct</a>
         </div>
         <div class="contact-item">
           <i class="fab fa-github"></i>
           <p><strong>GitHub</strong></p>
-          <p><a href="#" target="_blank">Voir mes projets</a></p>
+          <a href="#" target="_blank">View Code</a>
+        </div>
+        <!-- LinkedIn -->
+        <div class="contact-item">
+          <i class="fab fa-linkedin"></i>
+          <p><strong>LinkedIn</strong></p>
+          <a href="https://linkedin.com/in/yourprofile" target="_blank" id="linkedin-link">Connect</a>
+        </div>
+        <!-- Truth Social (custom SVG logo) -->
+        <div class="contact-item">
+          <svg class="social-icon-svg" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="12" cy="12" r="10" fill="none" stroke="var(--neon)" stroke-width="2"/>
+            <path d="M8 16 L12 6 L16 16 M9 12 L15 12" stroke="var(--neon)" stroke-width="2" fill="none"/>
+          </svg>
+          <p><strong>Truth Social</strong></p>
+          <a href="https://truthsocial.com/@yourhandle" target="_blank" id="truth-link">Follow</a>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- Footer -->
   <footer>
-    <p>&copy; 2025 CHARTECH. Tous droits réservés. Design futuriste.</p>
+    <p>© 2025 CHARTECH | Fueled by electricity, coffee & neon dreams</p>
   </footer>
 
-  <!-- Admin Overlay -->
-  <div class="admin-overlay" id="admin-overlay">
-    <div class="admin-panel">
-      <h2><i class="fas fa-lock"></i> Administration CHARTECH</h2>
-      <div class="admin-field">
-        <label>Titre Hero</label>
-        <input type="text" id="edit-hero-title" placeholder="CHARTECH">
-      </div>
-      <div class="admin-field">
-        <label>Texte À propos</label>
-        <textarea id="edit-about-text" rows="5" placeholder="Modifier le profil..."></textarea>
-      </div>
-      <div class="admin-actions">
-        <button class="btn-save" id="save-changes">Enregistrer</button>
-        <button class="btn-logout" id="logout-admin">Déconnexion</button>
-      </div>
-      <p style="color:#666; font-size:0.8rem; margin-top:1rem;">Modifications sauvegardées localement.</p>
+  <!-- Terminal Chatbot (now with math + knowledge) -->
+  <div class="terminal-toggle" id="term-toggle"><i class="fas fa-terminal"></i></div>
+  <div class="terminal-window" id="term-window">
+    <div class="term-header">
+      <span>root@chartech:~#</span>
+      <i class="fas fa-times" id="close-term" style="cursor:pointer;"></i>
+    </div>
+    <div class="term-messages" id="term-messages">
+      <div class="line bot">Welcome to CHARTECH AI. Type 'help' or ask anything (math, contact, about...).</div>
+    </div>
+    <div class="term-input">
+      <input type="text" id="user-input" placeholder="Ask or calculate...">
+      <button id="send-term"><i class="fas fa-arrow-right"></i></button>
     </div>
   </div>
 
-  <!-- Chatbot -->
-  <div class="chatbot-toggle" id="chatbot-toggle">
-    <i class="fas fa-robot"></i>
-  </div>
-  <div class="chatbot-window" id="chatbot-window">
-    <div class="chat-header">
-      <span>CHARTECH IA</span>
-      <i class="fas fa-times" id="close-chat" style="cursor:pointer;"></i>
-    </div>
-    <div class="chat-messages" id="chat-messages">
-      <div class="msg bot"><span>Bonjour ! Je suis l'assistant virtuel de CHARTECH. Comment puis-je vous aider ?</span></div>
-    </div>
-    <div class="chat-input">
-      <input type="text" id="user-input" placeholder="Votre message...">
-      <button id="send-message"><i class="fas fa-paper-plane"></i></button>
+  <!-- Admin overlay -->
+  <div class="admin-overlay" id="admin-overlay">
+    <div class="admin-panel">
+      <h3>ADMIN PANEL</h3>
+      <div class="admin-field">
+        <label>Hero Title</label>
+        <input type="text" id="edit-hero" value="CHARTECH">
+      </div>
+      <div class="admin-field">
+        <label>About Text (HTML)</label>
+        <textarea id="edit-about" rows="6"></textarea>
+      </div>
+      <div style="display:flex; justify-content:space-between;">
+        <button class="btn-save" id="save-changes">SAVE</button>
+        <button class="btn-logout" id="logout-admin">EXIT</button>
+      </div>
     </div>
   </div>
 
   <script>
-    // --- PARTICULES ANIMÉES (fond réseau) ---
-    const canvas = document.getElementById('particles-canvas');
+    // ---------- MATRIX RAIN ----------
+    const canvas = document.getElementById('matrix');
     const ctx = canvas.getContext('2d');
-    let particles = [];
-    const maxParticles = 80;
-    const connectionDist = 120;
-
-    function resizeCanvas() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    const chars = '01アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホ';
+    const charArr = chars.split('');
+    const fontSize = 14;
+    const columns = canvas.width / fontSize;
+    const drops = Array(Math.floor(columns)).fill(1);
+    function drawMatrix() {
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      ctx.fillStyle = '#00ff66';
+      ctx.font = fontSize + 'px monospace';
+      for (let i = 0; i < drops.length; i++) {
+        const text = charArr[Math.floor(Math.random() * charArr.length)];
+        ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+        if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+          drops[i] = 0;
+        }
+        drops[i]++;
+      }
+    }
+    setInterval(drawMatrix, 50);
+    window.addEventListener('resize', () => {
       canvas.width = window.innerWidth;
       canvas.height = window.innerHeight;
-    }
-    window.addEventListener('resize', resizeCanvas);
-    resizeCanvas();
+    });
 
-    class Particle {
-      constructor() {
-        this.x = Math.random() * canvas.width;
-        this.y = Math.random() * canvas.height;
-        this.vx = (Math.random() - 0.5) * 0.5;
-        this.vy = (Math.random() - 0.5) * 0.5;
+    // ---------- MOBILE MENU ----------
+    document.getElementById('mobile-menu').addEventListener('click', () => {
+      document.getElementById('nav-links').classList.toggle('active');
+    });
+
+    // ---------- TYPING EFFECT ----------
+    const typingEl = document.getElementById('typing-text');
+    const phrases = [
+      "I break hardware. I bend software.",
+      "Cybersecurity. AI. Electronics. Drones.",
+      "From Arduino to cloud – I build it all."
+    ];
+    let phraseIdx = 0, charIdx = 0, deleting = false, currentText = '';
+    function type() {
+      const full = phrases[phraseIdx];
+      if (!deleting) {
+        currentText = full.substring(0, charIdx + 1);
+        charIdx++;
+        typingEl.innerHTML = currentText + '<span class="cursor">|</span>';
+        if (charIdx === full.length) {
+          deleting = true;
+          setTimeout(type, 1500);
+          return;
+        }
+      } else {
+        currentText = full.substring(0, charIdx - 1);
+        charIdx--;
+        typingEl.innerHTML = currentText + '<span class="cursor">|</span>';
+        if (charIdx === 0) {
+          deleting = false;
+          phraseIdx = (phraseIdx + 1) % phrases.length;
+        }
       }
-      update() {
-        this.x += this.vx;
-        this.y += this.vy;
-        if (this.x < 0 || this.x > canvas.width) this.vx *= -1;
-        if (this.y < 0 || this.y > canvas.height) this.vy *= -1;
+      setTimeout(type, deleting ? 40 : 80);
+    }
+    type();
+
+    // ---------- TERMINAL CHATBOT (Math + Knowledge) ----------
+    const termToggle = document.getElementById('term-toggle');
+    const termWindow = document.getElementById('term-window');
+    const closeTerm = document.getElementById('close-term');
+    const termMessages = document.getElementById('term-messages');
+    const userInput = document.getElementById('user-input');
+    const sendTerm = document.getElementById('send-term');
+
+    termToggle.addEventListener('click', () => termWindow.style.display = 'flex');
+    closeTerm.addEventListener('click', () => termWindow.style.display = 'none');
+
+    function addTermLine(text, cls) {
+      const line = document.createElement('div');
+      line.className = 'line ' + cls;
+      line.textContent = text;
+      termMessages.appendChild(line);
+      termMessages.scrollTop = termMessages.scrollHeight;
+    }
+
+    // Knowledge base about CHARTECH
+    const knowledge = {
+      name: "CHARTECH",
+      founder: "Charles",
+      email: "charlestechnology46@gmail.com",
+      phone: "+243 892 959 679",
+      whatsapp: "https://wa.me/243892959679",
+      linkedin: "https://linkedin.com/in/yourprofile",
+      truth: "https://truthsocial.com/@yourhandle",
+      github: "#",
+      about: "CHARTECH is a hacker/maker initiative merging AI, electronics, drones, and cybersecurity.",
+      skills: "Python, JavaScript, HTML/CSS, Arduino, FreeCAD, AI, Cybersecurity, Electrical Engineering.",
+      projects: "Custom FPV Drone (building), AI integrations, electronics prototypes.",
+      location: "Congo (DRC), available worldwide online."
+    };
+
+    function searchKnowledge(input) {
+      const lower = input.toLowerCase();
+      if (lower.includes('email') || lower.includes('mail')) return 'Email: ' + knowledge.email;
+      if (lower.includes('phone') || lower.includes('call') || lower.includes('contact number')) return 'Phone: ' + knowledge.phone;
+      if (lower.includes('whatsapp')) return 'WhatsApp: ' + knowledge.whatsapp;
+      if (lower.includes('linkedin')) return 'LinkedIn: ' + knowledge.linkedin;
+      if (lower.includes('truth social') || lower.includes('truth')) return 'Truth Social: ' + knowledge.truth;
+      if (lower.includes('github')) return 'GitHub: ' + knowledge.github;
+      if (lower.includes('about') || lower.includes('who are you') || lower.includes('what is chartech')) return knowledge.about;
+      if (lower.includes('skills') || lower.includes('what can you do') || lower.includes('competences')) return knowledge.skills;
+      if (lower.includes('project') || lower.includes('drone') || lower.includes('build')) return knowledge.projects;
+      if (lower.includes('location') || lower.includes('where')) return 'Location: ' + knowledge.location;
+      if (lower.includes('founder') || lower.includes('who created') || lower.includes('name of founder')) return 'Founder: ' + knowledge.founder;
+      if (lower.includes('help')) return 'I can answer questions about CHARTECH (email, contact, skills, projects) and do math. Try "calculate 15*sin(0.5)" or "what is your email?"';
+      return null;
+    }
+
+    function isMathExpression(str) {
+      // Remove spaces and check if it's a valid math expression (digits, operators, parentheses, decimals, some functions)
+      const cleaned = str.replace(/\s/g, '');
+      const mathRegex = /^[\d\+\-\*\/\.\(\)\%\^eE]+$/;
+      // Also allow words like sqrt, sin, cos, tan, log, pi
+      if (mathRegex.test(cleaned)) return true;
+      // Check if it's a request like "calculate ..." or "what is ..."
+      const mathRequest = str.toLowerCase().replace(/\s/g, '');
+      if (mathRequest.startsWith('calculate') || mathRequest.startsWith('solve') || mathRequest.startsWith('math') || mathRequest.startsWith('whatis')) {
+        return true;
       }
-      draw() {
-        ctx.beginPath();
-        ctx.arc(this.x, this.y, 2, 0, Math.PI * 2);
-        ctx.fillStyle = '#00f0ff';
-        ctx.fill();
+      return false;
+    }
+
+    function extractExpression(input) {
+      // Try to extract a math expression from the string
+      let expr = input.replace(/\s/g, '');
+      // Remove leading words like "calculate", "what is", "solve"
+      expr = expr.replace(/^(calculate|solve|math|whatis)/i, '');
+      // Replace ^ with ** for exponentiation
+      expr = expr.replace(/\^/g, '**');
+      // Basic safety: only allow allowed characters
+      if (/^[0-9+\-*/.()%** \t]+$/.test(expr) || /^[0-9+\-*/.()eEpi sqrt sin cos tan log]+$/.test(expr)) {
+        return expr;
+      }
+      return null;
+    }
+
+    function computeMath(expr) {
+      try {
+        // Add Math functions to scope
+        const result = eval(expr);
+        if (typeof result === 'number' && !isNaN(result)) {
+          return result.toString();
+        }
+        return null;
+      } catch (e) {
+        return null;
       }
     }
 
-    for (let i = 0; i < maxParticles; i++) {
-      particles.push(new Particle());
-    }
+    function processCommand(cmd) {
+      addTermLine('> ' + cmd, 'user');
+      const lower = cmd.trim().toLowerCase();
 
-    function animateParticles() {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      for (let i = 0; i < particles.length; i++) {
-        particles[i].update();
-        particles[i].draw();
-        for (let j = i + 1; j < particles.length; j++) {
-          const dx = particles[i].x - particles[j].x;
-          const dy = particles[i].y - particles[j].y;
-          const dist = Math.sqrt(dx * dx + dy * dy);
-          if (dist < connectionDist) {
-            ctx.beginPath();
-            ctx.moveTo(particles[i].x, particles[i].y);
-            ctx.lineTo(particles[j].x, particles[j].y);
-            ctx.strokeStyle = `rgba(0, 240, 255, ${1 - dist / connectionDist})`;
-            ctx.lineWidth = 0.5;
-            ctx.stroke();
+      // 1. Check for math
+      if (isMathExpression(cmd)) {
+        const expr = extractExpression(cmd);
+        if (expr) {
+          const result = computeMath(expr);
+          if (result !== null) {
+            addTermLine(result, 'bot');
+            userInput.value = '';
+            return;
+          } else {
+            addTermLine("Could not compute. Try a simpler expression.", 'bot');
+            userInput.value = '';
+            return;
           }
         }
       }
-      requestAnimationFrame(animateParticles);
-    }
-    animateParticles();
 
-    // --- MENU MOBILE ---
-    const mobileMenu = document.getElementById('mobile-menu');
-    const navLinks = document.getElementById('nav-links');
-    mobileMenu.addEventListener('click', () => {
-      navLinks.classList.toggle('active');
+      // 2. Check knowledge base
+      const knowledgeAnswer = searchKnowledge(cmd);
+      if (knowledgeAnswer) {
+        addTermLine(knowledgeAnswer, 'bot');
+        userInput.value = '';
+        return;
+      }
+
+      // 3. Fallback
+      const fallbackResponses = {
+        'help': 'I can answer about contact, skills, projects, or calculate math. Type e.g. "email", "calculate 2+2", "what is your phone?"',
+        'clear': ''
+      };
+      if (lower === 'clear') {
+        termMessages.innerHTML = '';
+        userInput.value = '';
+        return;
+      }
+      if (fallbackResponses[lower]) {
+        addTermLine(fallbackResponses[lower], 'bot');
+      } else {
+        addTermLine("I don't understand. Type 'help' for options.", 'bot');
+      }
+      userInput.value = '';
+    }
+
+    sendTerm.addEventListener('click', () => {
+      if (userInput.value.trim()) processCommand(userInput.value.trim());
+    });
+    userInput.addEventListener('keypress', e => {
+      if (e.key === 'Enter' && userInput.value.trim()) processCommand(userInput.value.trim());
     });
 
-    // --- ADMIN ---
+    // ---------- ADMIN ----------
     const adminLink = document.getElementById('admin-link');
     const adminOverlay = document.getElementById('admin-overlay');
-    const logoutAdmin = document.getElementById('logout-admin');
-    const saveChanges = document.getElementById('save-changes');
-    const editHeroTitle = document.getElementById('edit-hero-title');
-    const editAboutText = document.getElementById('edit-about-text');
-    const aboutTextContent = document.getElementById('about-text-content');
-    const heroTitle = document.querySelector('.hero-content h1');
+    const editHero = document.getElementById('edit-hero');
+    const editAbout = document.getElementById('edit-about');
+    const aboutContainer = document.getElementById('about-text-content');
+    const heroTitle = document.querySelector('.glitch');
 
-    // Simule une vérification de mot de passe (simple)
-    adminLink.addEventListener('click', (e) => {
+    adminLink.addEventListener('click', e => {
       e.preventDefault();
-      const password = prompt('Mot de passe administrateur :');
-      if (password === 'admin123') {  // Change ce mot de passe
-        // Charger les valeurs sauvegardées ou actuelles
-        const savedHero = localStorage.getItem('chartech_hero') || heroTitle.innerText;
-        const savedAbout = localStorage.getItem('chartech_about') || aboutTextContent.innerHTML;
-        editHeroTitle.value = savedHero;
-        editAboutText.value = savedAbout;
+      const pwd = prompt('Admin password:');
+      if (pwd === 'admin123') {
+        editHero.value = heroTitle.innerText;
+        editAbout.value = aboutContainer.innerHTML;
         adminOverlay.style.display = 'flex';
-        navLinks.classList.remove('active');
+        document.getElementById('nav-links').classList.remove('active');
       } else {
-        alert('Accès refusé.');
+        alert('Access denied.');
       }
     });
 
-    logoutAdmin.addEventListener('click', () => {
+    document.getElementById('logout-admin').addEventListener('click', () => adminOverlay.style.display = 'none');
+    document.getElementById('save-changes').addEventListener('click', () => {
+      heroTitle.innerText = editHero.value;
+      aboutContainer.innerHTML = editAbout.value;
+      localStorage.setItem('chartech_hero', editHero.value);
+      localStorage.setItem('chartech_about', editAbout.value);
       adminOverlay.style.display = 'none';
     });
 
-    saveChanges.addEventListener('click', () => {
-      const newHero = editHeroTitle.value.trim() || 'CHARTECH';
-      const newAbout = editAboutText.value.trim() || aboutTextContent.innerHTML;
-      heroTitle.innerText = newHero;
-      aboutTextContent.innerHTML = newAbout;
-      localStorage.setItem('chartech_hero', newHero);
-      localStorage.setItem('chartech_about', newAbout);
-      adminOverlay.style.display = 'none';
-      alert('Modifications enregistrées avec succès !');
-    });
-
-    // Fermer l'overlay admin en cliquant à l'extérieur
-    adminOverlay.addEventListener('click', (e) => {
-      if (e.target === adminOverlay) adminOverlay.style.display = 'none';
-    });
-
-    // --- CHATBOT IA ---
-    const chatbotToggle = document.getElementById('chatbot-toggle');
-    const chatbotWindow = document.getElementById('chatbot-window');
-    const closeChat = document.getElementById('close-chat');
-    const chatMessages = document.getElementById('chat-messages');
-    const userInput = document.getElementById('user-input');
-    const sendBtn = document.getElementById('send-message');
-
-    chatbotToggle.addEventListener('click', () => {
-      chatbotWindow.style.display = 'flex';
-    });
-    closeChat.addEventListener('click', () => {
-      chatbotWindow.style.display = 'none';
-    });
-
-    function addMessage(text, sender) {
-      const div = document.createElement('div');
-      div.className = `msg ${sender}`;
-      const span = document.createElement('span');
-      span.textContent = text;
-      div.appendChild(span);
-      chatMessages.appendChild(div);
-      chatMessages.scrollTop = chatMessages.scrollHeight;
-    }
-
-    async function getAIResponse(userMessage) {
-      // Remplace 'TA_CLE_API' par ta véritable clé OpenAI
-      const API_KEY = 'TA_CLE_API'; 
-      if (API_KEY === 'TA_CLE_API') {
-        // Mode démo si pas de clé
-        const demoResponses = [
-          "Je suis l'assistant virtuel CHARTECH. Pour activer l'IA réelle, ajoute ta clé API OpenAI dans le code.",
-          "CHARTECH propose des solutions logicielles et électriques. Comment puis-je t'aider ?",
-          "Intéressant ! Contacte-moi via l'email pour plus d'infos."
-        ];
-        return demoResponses[Math.floor(Math.random() * demoResponses.length)];
-      }
-
-      try {
-        const response = await fetch('https://api.openai.com/v1/chat/completions', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${API_KEY}`
-          },
-          body: JSON.stringify({
-            model: 'gpt-3.5-turbo',
-            messages: [
-              { role: 'system', content: 'Tu es un assistant utile pour CHARTECH, une entreprise technologique.' },
-              { role: 'user', content: userMessage }
-            ],
-            max_tokens: 150
-          })
-        });
-        const data = await response.json();
-        return data.choices[0].message.content.trim();
-      } catch (error) {
-        return "Désolé, une erreur est survenue. Vérifie ta connexion ou ta clé API.";
-      }
-    }
-
-    async function sendMessage() {
-      const message = userInput.value.trim();
-      if (!message) return;
-      addMessage(message, 'user');
-      userInput.value = '';
-      const botReply = await getAIResponse(message);
-      addMessage(botReply, 'bot');
-    }
-
-    sendBtn.addEventListener('click', sendMessage);
-    userInput.addEventListener('keypress', (e) => {
-      if (e.key === 'Enter') sendMessage();
-    });
-
-    // --- Défilement fluide pour les ancres (sauf admin) ---
-    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-      anchor.addEventListener('click', function(e) {
-        const targetId = this.getAttribute('href');
-        if (targetId === '#') return;
-        const target = document.querySelector(targetId);
-        if (target) {
-          e.preventDefault();
-          target.scrollIntoView({ behavior: 'smooth' });
-          navLinks.classList.remove('active');
-        }
-      });
+    window.addEventListener('load', () => {
+      const savedHero = localStorage.getItem('chartech_hero');
+      const savedAbout = localStorage.getItem('chartech_about');
+      if (savedHero) heroTitle.innerText = savedHero;
+      if (savedAbout) aboutContainer.innerHTML = savedAbout;
     });
   </script>
 </body>
