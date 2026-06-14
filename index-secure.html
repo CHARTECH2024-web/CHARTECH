@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>CHARTECH | Hacker · AI Engineer · Builder</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * { margin:0; padding:0; box-sizing:border-box; }
+        :root {
+            --bg: #050505;
+            --surface: #0f0f0f;
+            --neon: #00ff66;
+            --neon2: #00ccff;
+            --text: #cccccc;
+            --mono: 'Share Tech Mono', monospace;
+            --sans: 'Inter', sans-serif;
+        }
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: var(--sans);
+            scroll-behavior: smooth;
+            overflow-x: hidden;
+        }
+        canvas#matrix {
+            position: fixed;
+            top:0; left:0;
+            width:100vw; height:100vh;
+            z-index:0;
+            opacity:0.08;
+            pointer-events:none;
+        }
+
+        /* NAVIGATION */
+        .navbar {
+            position: fixed;
+            top:0; width:100%;
+            background: rgba(5,5,5,0.85);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(0,255,100,0.2);
+            z-index: 1000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 5%;
+            height: 70px;
+            font-family: var(--mono);
+        }
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--neon);
+            text-shadow: 0 0 15px var(--neon);
+            letter-spacing: 3px;
+        }
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+        .nav-links a {
+            color: #aaa;
+            text-decoration: none;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            transition: 0.3s;
+        }
+        .nav-links a:hover {
+            color: var(--neon);
+            text-shadow: 0 0 8px var(--neon);
+        }
+        .menu-toggle {
+            display: none;
+            font-size: 1.6rem;
+            color: var(--neon);
+            cursor: pointer;
+        }
+        .charles-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            background: rgba(0,255,100,0.1);
+            border: 1px solid var(--neon);
+            border-radius: 20px;
+            font-size: 0.7rem;
+            font-weight: bold;
+            margin-left: 10px;
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        /* SECTIONS */
+        .container {
+            position: relative;
+            z-index: 2;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 25px;
+        }
+        section {
+            position: relative;
+            z-index: 1;
+            padding: 100px 0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        h2 {
+            font-family: var(--mono);
+            font-size: 2.5rem;
+            margin-bottom: 2rem;
+            color: var(--neon);
+            text-shadow: 0 0 20px rgba(0,255,100,0.8);
+            display: inline-block;
+        }
+        h2::after {
+            content: '_';
+            animation: blink 1s step-end infinite;
+        }
+        @keyframes blink {
+            0%,100%{opacity:1;}
+            50%{opacity:0;}
+        }
+
+        /* HERO */
+        .hero-content {
+            text-align: center;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .glitch {
+            font-family: var(--mono);
+            font-size: 5.5rem;
+            font-weight: 700;
+            color: var(--neon);
+            text-shadow: 0 0 20px var(--neon);
+            position: relative;
+            display: inline-block;
+            animation: glitch 2s infinite;
+        }
+        @keyframes glitch {
+            0%{transform:translate(0)}
+            20%{transform:translate(-3px,3px)}
+            40%{transform:translate(-3px,-3px)}
+            60%{transform:translate(3px,3px)}
+            80%{transform:translate(3px,-3px)}
+            100%{transform:translate(0)}
+        }
+        .glitch::before,
+        .glitch::after {
+            content: 'CHARTECH';
+            position: absolute;
+            top:0; left:0;
+            width:100%; height:100%;
+            opacity: 0.8;
+        }
+        .glitch::before {
+            color: #0ff;
+            z-index: -1;
+            animation: glitch 1.5s infinite;
+        }
+        .glitch::after {
+            color: #f0f;
+            z-index: -2;
+            animation: glitch 2s infinite reverse;
+        }
+        .typing-text {
+            font-family: var(--mono);
+            font-size: 1.2rem;
+            color: var(--neon2);
+            margin: 1.5rem 0;
+            min-height: 1.8em;
+        }
+        .cursor { animation: blink 1s infinite; font-weight: bold; }
+
+        /* BUTTONS */
+        .btn {
+            display: inline-block;
+            padding: 12px 30px;
+            border: 1px solid var(--neon);
+            color: var(--neon);
+            text-decoration: none;
+            font-family: var(--mono);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            border-radius: 4px;
+            transition: 0.3s;
+            margin: 5px;
+            background: transparent;
+            cursor: pointer;
+        }
+        .btn:hover {
+            background: var(--neon);
+            color: #000;
+            box-shadow: 0 0 25px var(--neon);
+        }
+        .btn-primary {
+            background: var(--neon);
+            color: #000;
+            border: none;
+            font-weight: bold;
+        }
+        .btn-primary:hover {
+            box-shadow: 0 0 35px var(--neon);
+        }
+
+        /* CHARLES AI TERMINAL */
+        .terminal-toggle {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: #0a0a0a;
+            border: 2px solid var(--neon2);
+            color: var(--neon2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            cursor: pointer;
+            z-index: 1500;
+            box-shadow: 0 0 25px var(--neon2);
+            transition: 0.3s;
+        }
+        .terminal-toggle:hover {
+            transform: scale(1.15);
+            box-shadow: 0 0 35px var(--neon2);
+        }
+        .terminal-window {
+            display: none;
+            position: fixed;
+            bottom: 100px;
+            right: 30px;
+            width: 420px;
+            max-width: 90vw;
+            height: 550px;
+            background: #050505;
+            border: 2px solid var(--neon2);
+            border-radius: 15px;
+            z-index: 1500;
+            flex-direction: column;
+            font-family: var(--mono);
+            box-shadow: 0 0 40px rgba(0,204,255,0.6);
+            overflow: hidden;
+        }
+        .terminal-window.active {
+            display: flex;
+        }
+        .term-header {
+            background: linear-gradient(90deg, #0f0f0f 0%, #1a1a2e 100%);
+            padding: 12px 15px;
+            border-bottom: 1px solid var(--neon2);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: var(--neon2);
+        }
+        .term-title {
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .term-title i {
+            animation: pulse 1s infinite;
+        }
+        .term-messages {
+            flex: 1;
+            padding: 15px;
+            overflow-y: auto;
+            font-size: 0.9rem;
+            background: #000;
+        }
+        .term-messages .line {
+            margin-bottom: 10px;
+            word-wrap: break-word;
+            line-height: 1.5;
+        }
+        .term-messages .user {
+            color: var(--neon);
+            font-weight: bold;
+        }
+        .term-messages .bot {
+            color: var(--neon2);
+        }
+        .term-messages .system {
+            color: #888;
+            font-style: italic;
+        }
+        .term-input {
+            display: flex;
+            border-top: 1px solid #222;
+        }
+        .term-input input {
+            flex: 1;
+            background: #000;
+            border: none;
+            padding: 12px 15px;
+            color: var(--neon);
+            font-family: var(--mono);
+            outline: none;
+        }
+        .term-input button {
+            background: transparent;
+            border: none;
+            color: var(--neon2);
+            padding: 0 15px;
+            cursor: pointer;
+            font-size: 1.2rem;
+            transition: 0.2s;
+        }
+        .term-input button:hover {
+            color: var(--neon);
+        }
+
+        footer {
+            text-align: center;
+            padding: 2rem;
+            border-top: 1px solid rgba(0,255,100,0.15);
+            font-family: var(--mono);
+            color: #555;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+                flex-direction: column;
+                background: #000;
+                position: absolute;
+                top: 70px;
+                left: 0;
+                width: 100%;
+                padding: 1rem;
+                border-bottom: 1px solid var(--neon);
+            }
+            .nav-links.active {
+                display: flex;
+            }
+            .menu-toggle {
+                display: block;
+            }
+            .glitch {
+                font-size: 3rem;
+            }
+            .terminal-window {
+                width: 95vw;
+                right: 2.5vw;
+            }
+        }
+    </style>
+</head>
+<body>
+    <canvas id="matrix"></canvas>
+
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="logo">> CHARTECH <span class="charles-badge">🤖 CHARLES AI</span></div>
+        <div class="menu-toggle" id="mobile-menu"><i class="fas fa-bars"></i></div>
+        <ul class="nav-links" id="nav-links">
+            <li><a href="#home">Home</a></li>
+            <li><a href="#about">About</a></li>
+            <li><a href="#skills">Skills</a></li>
+            <li><a href="#contact">Contact</a></li>
+        </ul>
+    </nav>
+
+    <!-- Hero -->
+    <section id="home">
+        <div class="container hero-content">
+            <h1 class="glitch">CHARTECH</h1>
+            <div class="typing-text" id="typing-text"></div>
+            <div style="margin-top:1.5rem; display: flex; flex-wrap: wrap; justify-content: center; gap: 10px;">
+                <a href="#charles" class="btn btn-primary">MEET CHARLES AI</a>
+                <a href="#skills" class="btn">VIEW SKILLS</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- About -->
+    <section id="about">
+        <div class="container">
+            <h2>// WHOAMI</h2>
+            <p style="font-size: 1.1rem; line-height: 1.8; color: #bbb; max-width: 800px;">
+                I'm <strong style="color: var(--neon);">Charles Technology</strong> – a 16-year-old hacker, AI engineer, and hardware architect from Bukavu (DRC). I live at the intersection of neural networks, electronics, and full-stack development.
+            </p>
+            <p style="font-size: 1.1rem; line-height: 1.8; color: #bbb; max-width: 800px; margin-top: 1.5rem;">
+                This portfolio now features <strong style="color: var(--neon2);">CHARLES AI</strong> – an advanced AI assistant that can analyze code, recommend projects, assess skills, and have intelligent conversations.
+            </p>
+        </div>
+    </section>
+
+    <!-- Skills -->
+    <section id="skills">
+        <div class="container">
+            <h2>// SKILLSET</h2>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 2rem;">
+                <div style="background: rgba(0,255,100,0.03); border: 1px solid rgba(0,255,100,0.2); border-radius: 20px; padding: 2rem; backdrop-filter: blur(10px);">
+                    <h3 style="color: var(--neon); margin-bottom: 1.2rem; display: flex; align-items: center; gap: 12px; font-family: var(--mono); font-size: 1.5rem;"><i class="fas fa-terminal"></i> Software & AI</h3>
+                    <ul style="list-style: none;">
+                        <li style="padding: 8px 0; display: flex; align-items: center; gap: 12px; font-size: 1rem;"><i class="fas fa-chevron-right" style="color: var(--neon2); font-size: 0.9rem;"></i> Python (ML, Automation)</li>
+                        <li style="padding: 8px 0; display: flex; align-items: center; gap: 12px; font-size: 1rem;"><i class="fas fa-chevron-right" style="color: var(--neon2); font-size: 0.9rem;"></i> JavaScript / TypeScript</li>
+                        <li style="padding: 8px 0; display: flex; align-items: center; gap: 12px; font-size: 1rem;"><i class="fas fa-chevron-right" style="color: var(--neon2); font-size: 0.9rem;"></i> AI/ML & Data Science</li>
+                        <li style="padding: 8px 0; display: flex; align-items: center; gap: 12px; font-size: 1rem;"><i class="fas fa-chevron-right" style="color: var(--neon2); font-size: 0.9rem;"></i> Firebase & Backend</li>
+                    </ul>
+                </div>
+                <div style="background: rgba(0,255,100,0.03); border: 1px solid rgba(0,255,100,0.2); border-radius: 20px; padding: 2rem; backdrop-filter: blur(10px);">
+                    <h3 style="color: var(--neon); margin-bottom: 1.2rem; display: flex; align-items: center; gap: 12px; font-family: var(--mono); font-size: 1.5rem;"><i class="fas fa-microchip"></i> Hardware & IoT</h3>
+                    <ul style="list-style: none;">
+                        <li style="padding: 8px 0; display: flex; align-items: center; gap: 12px; font-size: 1rem;"><i class="fas fa-chevron-right" style="color: var(--neon2); font-size: 0.9rem;"></i> ESP32 / Arduino / C++</li>
+                        <li style="padding: 8px 0; display: flex; align-items: center; gap: 12px; font-size: 1rem;"><i class="fas fa-chevron-right" style="color: var(--neon2); font-size: 0.9rem;"></i> Raspberry Pi & Linux</li>
+                        <li style="padding: 8px 0; display: flex; align-items: center; gap: 12px; font-size: 1rem;"><i class="fas fa-chevron-right" style="color: var(--neon2); font-size: 0.9rem;"></i> Circuit Design & Sensors</li>
+                        <li style="padding: 8px 0; display: flex; align-items: center; gap: 12px; font-size: 1rem;"><i class="fas fa-chevron-right" style="color: var(--neon2); font-size: 0.9rem;"></i> FreeCAD (3D Modeling)</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact -->
+    <section id="contact">
+        <div class="container">
+            <h2>// CONTACT</h2>
+            <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 2rem;">
+                <div style="background: rgba(255,255,255,0.02); border: 1px solid rgba(0,255,100,0.2); border-radius: 20px; padding: 2rem; text-align: center; width: 250px; backdrop-filter: blur(5px);">
+                    <i style="font-size: 2.2rem; color: var(--neon); margin-bottom: 1rem; display: block;"></i>
+                    <p><strong>Email</strong></p>
+                    <a href="mailto:charlestechnology46@gmail.com" style="color: var(--neon2); text-decoration: none; font-weight: bold; font-family: var(--mono);">Direct Email</a>
+                </div>
+                <div style="background: rgba(255,255,255,0.02); border: 1px solid rgba(0,255,100,0.2); border-radius: 20px; padding: 2rem; text-align: center; width: 250px; backdrop-filter: blur(5px);">
+                    <i class="fab fa-whatsapp" style="font-size: 2.2rem; color: var(--neon); margin-bottom: 1rem; display: block;"></i>
+                    <p><strong>WhatsApp</strong></p>
+                    <a href="https://wa.me/243892959679" target="_blank" style="color: var(--neon2); text-decoration: none; font-weight: bold; font-family: var(--mono);">Chat Now</a>
+                </div>
+                <div style="background: rgba(255,255,255,0.02); border: 1px solid rgba(0,255,100,0.2); border-radius: 20px; padding: 2rem; text-align: center; width: 250px; backdrop-filter: blur(5px);">
+                    <i class="fab fa-github" style="font-size: 2.2rem; color: var(--neon); margin-bottom: 1rem; display: block;"></i>
+                    <p><strong>GitHub</strong></p>
+                    <a href="https://github.com/chartech2024-web" target="_blank" style="color: var(--neon2); text-decoration: none; font-weight: bold; font-family: var(--mono);">@chartech2024-web</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <p>© 2026 CHARTECH | Powered by CHARLES AI, logic, electricity & neon dreams.</p>
+    </footer>
+
+    <!-- CHARLES AI Terminal -->
+    <div class="terminal-toggle" id="term-toggle" title="Open CHARLES AI"><i class="fas fa-robot"></i></div>
+    <div class="terminal-window" id="term-window">
+        <div class="term-header">
+            <div class="term-title">
+                <i class="fas fa-circle"></i> CHARLES AI v2.0
+            </div>
+            <i class="fas fa-times" id="close-term" style="cursor:pointer; font-size:1.2rem;"></i>
+        </div>
+        <div class="term-messages" id="term-messages">
+            <div class="line system">[ CHARLES AI v2.0 Online ]</div>
+            <div class="line bot">🤖 CHARLES: Ready to assist. Type 'help' for commands.</div>
+        </div>
+        <div class="term-input">
+            <input type="text" id="user-input" placeholder="Ask CHARLES anything..." autocomplete="off">
+            <button id="send-term" title="Send message"><i class="fas fa-paper-plane"></i></button>
+        </div>
+    </div>
+
+    <!-- Matrix Rain -->
+    <script>
+        const canvas = document.getElementById('matrix');
+        const ctx = canvas.getContext('2d');
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+        const chars = '01アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホ';
+        const charArr = chars.split('');
+        const fontSize = 14;
+        let columns, drops;
+        function initMatrix() {
+            columns = Math.floor(canvas.width / fontSize);
+            drops = Array(columns).fill(1);
+        }
+        initMatrix();
+        function drawMatrix() {
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = '#00ff66';
+            ctx.font = fontSize + 'px monospace';
+            for (let i = 0; i < drops.length; i++) {
+                const text = charArr[Math.floor(Math.random() * charArr.length)];
+                ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+                if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+                    drops[i] = 0;
+                }
+                drops[i]++;
+            }
+        }
+        setInterval(drawMatrix, 50);
+    </script>
+
+    <!-- Typing Effect -->
+    <script>
+        const typingEl = document.getElementById('typing-text');
+        const phrases = [
+            "Hack the hardware. Engineer the AI.",
+            "CHARLES AI: Your intelligent coding companion.",
+            "Building the future from Bukavu."
+        ];
+        let phraseIdx = 0, charIdx = 0, deleting = false;
+        function type() {
+            const full = phrases[phraseIdx];
+            if (!deleting) {
+                typingEl.innerHTML = full.substring(0, charIdx + 1) + '<span class="cursor">|</span>';
+                charIdx++;
+                if (charIdx === full.length) {
+                    deleting = true;
+                    setTimeout(type, 2000);
+                    return;
+                }
+            } else {
+                typingEl.innerHTML = full.substring(0, charIdx - 1) + '<span class="cursor">|</span>';
+                charIdx--;
+                if (charIdx === 0) {
+                    deleting = false;
+                    phraseIdx = (phraseIdx + 1) % phrases.length;
+                }
+            }
+            setTimeout(type, deleting ? 30 : 80);
+        }
+        type();
+    </script>
+
+    <!-- CHARLES AI Terminal Logic -->
+    <script>
+        const termToggle = document.getElementById('term-toggle');
+        const termWindow = document.getElementById('term-window');
+        const closeTerm = document.getElementById('close-term');
+        const termMessages = document.getElementById('term-messages');
+        const userInput = document.getElementById('user-input');
+        const sendTerm = document.getElementById('send-term');
+
+        termToggle.addEventListener('click', () => termWindow.classList.toggle('active'));
+        closeTerm.addEventListener('click', () => termWindow.classList.remove('active'));
+        userInput.addEventListener('focus', () => userInput.placeholder = '');
+        userInput.addEventListener('blur', () => userInput.placeholder = 'Ask CHARLES anything...');
+
+        function addTermLine(text, cls = 'bot') {
+            const line = document.createElement('div');
+            line.className = 'line ' + cls;
+            line.textContent = text;
+            termMessages.appendChild(line);
+            termMessages.scrollTop = termMessages.scrollHeight;
+        }
+
+        const knowledge = {
+            name: 'CHARLES AI v2.0',
+            creator: 'Charles Technology',
+            about: 'CHARLES is an advanced AI assistant for CHARTECH, featuring code analysis, skill assessment, and intelligent conversations.',
+            skills: 'Python, JavaScript, C++, FreeCAD, ESP32, Arduino, Firebase, ML/AI, Electrical Engineering, 3D Design, Drone Systems.',
+            projects: 'CH01: 8-motor eVTOL concept | CH-APP: Real-time messenger with AI',
+            contact: 'Email: charlestechnology46@gmail.com | WhatsApp: +243 892 959 679',
+            vision: 'Building local tech in Bukavu before going global.',
+            commands: 'help, about, skills, projects, contact, clear, analyze [code], recommend [interests]'
+        };
+
+        function processCommand(cmd) {
+            addTermLine('> ' + cmd, 'user');
+            const lower = cmd.trim().toLowerCase();
+
+            if (lower === 'help') {
+                addTermLine('Available commands: about, skills, projects, contact, clear, vision', 'system');
+                addTermLine('Try: "analyze my code" or "recommend projects" for advanced features', 'bot');
+            } else if (lower.includes('about')) {
+                addTermLine(knowledge.about, 'bot');
+            } else if (lower.includes('skills') || lower.includes('competences')) {
+                addTermLine(knowledge.skills, 'bot');
+            } else if (lower.includes('project')) {
+                addTermLine(knowledge.projects, 'bot');
+            } else if (lower.includes('contact')) {
+                addTermLine(knowledge.contact, 'bot');
+            } else if (lower.includes('vision')) {
+                addTermLine(knowledge.vision, 'bot');
+            } else if (lower === 'clear') {
+                termMessages.innerHTML = '<div class="line system">[ Terminal Cleared ]</div>';
+            } else {
+                addTermLine('💡 I understood "' + cmd + '", but advanced features require OpenAI API key. Configure VITE_CHARLES_API_KEY to unlock full power!', 'bot');
+            }
+            userInput.value = '';
+        }
+
+        sendTerm.addEventListener('click', () => {
+            if (userInput.value.trim()) processCommand(userInput.value.trim());
+        });
+        userInput.addEventListener('keypress', e => {
+            if (e.key === 'Enter' && userInput.value.trim()) processCommand(userInput.value.trim());
+        });
+    </script>
+</body>
+</html>
