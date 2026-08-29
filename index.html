@@ -1,973 +1,181 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>CHARTECH | Hacker · AI Engineer · Builder</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <style>
-        * { margin:0; padding:0; box-sizing:border-box; }
-        :root {
-            --bg: #050505;
-            --surface: #0f0f0f;
-            --neon: #00ff66;
-            --neon2: #00ccff;
-            --text: #cccccc;
-            --mono: 'Share Tech Mono', monospace;
-            --sans: 'Inter', sans-serif;
-        }
-        body {
-            background: var(--bg);
-            color: var(--text);
-            font-family: var(--sans);
-            scroll-behavior: smooth;
-            overflow-x: hidden;
-        }
-        canvas#matrix {
-            position: fixed;
-            top:0; left:0;
-            width:100vw; height:100vh;
-            z-index:0;
-            opacity:0.08;
-            pointer-events:none;
-        }
-
-        /* NAVIGATION */
-        .navbar {
-            position: fixed;
-            top:0; width:100%;
-            background: rgba(5,5,5,0.85);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border-bottom: 1px solid rgba(0,255,100,0.2);
-            z-index: 1000;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 0 5%;
-            height: 70px;
-            font-family: var(--mono);
-        }
-        .logo {
-            font-size: 1.8rem;
-            font-weight: 700;
-            color: var(--neon);
-            text-shadow: 0 0 15px var(--neon);
-            letter-spacing: 3px;
-        }
-        .nav-links {
-            display: flex;
-            gap: 2rem;
-            list-style: none;
-        }
-        .nav-links a {
-            color: #aaa;
-            text-decoration: none;
-            font-size: 0.9rem;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            transition: 0.3s;
-        }
-        .nav-links a:hover {
-            color: var(--neon);
-            text-shadow: 0 0 8px var(--neon);
-        }
-        .menu-toggle {
-            display: none;
-            font-size: 1.6rem;
-            color: var(--neon);
-            cursor: pointer;
-        }
-
-        /* SECTIONS */
-        .container {
-            position: relative;
-            z-index: 2;
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 25px;
-        }
-        section {
-            position: relative;
-            z-index: 1;
-            padding: 100px 0;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-        }
-        h2 {
-            font-family: var(--mono);
-            font-size: 2.5rem;
-            margin-bottom: 2rem;
-            color: var(--neon);
-            text-shadow: 0 0 20px rgba(0,255,100,0.8);
-            display: inline-block;
-        }
-        h2::after {
-            content: '_';
-            animation: blink 1s step-end infinite;
-        }
-        @keyframes blink {
-            0%,100%{opacity:1;}
-            50%{opacity:0;}
-        }
-
-        /* HERO */
-        .hero-content {
-            text-align: center;
-            max-width: 800px;
-            margin: 0 auto;
-        }
-        .glitch {
-            font-family: var(--mono);
-            font-size: 5.5rem;
-            font-weight: 700;
-            color: var(--neon);
-            text-shadow: 0 0 20px var(--neon);
-            position: relative;
-            display: inline-block;
-            animation: glitch 2s infinite;
-        }
-        @keyframes glitch {
-            0%{transform:translate(0)}
-            20%{transform:translate(-3px,3px)}
-            40%{transform:translate(-3px,-3px)}
-            60%{transform:translate(3px,3px)}
-            80%{transform:translate(3px,-3px)}
-            100%{transform:translate(0)}
-        }
-        .glitch::before,
-        .glitch::after {
-            content: 'CHARTECH';
-            position: absolute;
-            top:0; left:0;
-            width:100%; height:100%;
-            opacity: 0.8;
-        }
-        .glitch::before {
-            color: #0ff;
-            z-index: -1;
-            animation: glitch 1.5s infinite;
-        }
-        .glitch::after {
-            color: #f0f;
-            z-index: -2;
-            animation: glitch 2s infinite reverse;
-        }
-        .typing-text {
-            font-family: var(--mono);
-            font-size: 1.2rem;
-            color: var(--neon2);
-            margin: 1.5rem 0;
-            min-height: 1.8em;
-        }
-        .cursor { animation: blink 1s infinite; font-weight: bold; }
-
-        /* BUTTONS */
-        .btn {
-            display: inline-block;
-            padding: 12px 30px;
-            border: 1px solid var(--neon);
-            color: var(--neon);
-            text-decoration: none;
-            font-family: var(--mono);
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            border-radius: 4px;
-            transition: 0.3s;
-            margin: 5px;
-            background: transparent;
-            cursor: pointer;
-        }
-        .btn:hover {
-            background: var(--neon);
-            color: #000;
-            box-shadow: 0 0 25px var(--neon);
-        }
-        .btn-primary {
-            background: var(--neon);
-            color: #000;
-            border: none;
-            font-weight: bold;
-        }
-        .btn-primary:hover {
-            box-shadow: 0 0 35px var(--neon);
-        }
-        .google-btn {
-            border-color: var(--neon2);
-            color: var(--neon2);
-            font-weight: bold;
-        }
-        .google-btn:hover {
-            background: var(--neon2);
-            color: #000;
-            box-shadow: 0 0 25px var(--neon2);
-        }
-
-        /* ABOUT */
-        .about-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 3rem;
-            align-items: center;
-        }
-        .about-text p {
-            font-size: 1.1rem;
-            line-height: 1.8;
-            margin-bottom: 1.5rem;
-            color: #bbb;
-        }
-        .about-text strong {
-            color: var(--neon);
-            font-weight: 600;
-        }
-        .profile-img {
-            width: 260px;
-            height: 260px;
-            border-radius: 50%;
-            border: 3px solid var(--neon);
-            box-shadow: 0 0 30px rgba(0,255,100,0.5);
-            object-fit: cover;
-            background: #111;
-        }
-
-        /* SKILLS */
-        .skills-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 2rem;
-        }
-        .skill-card {
-            background: rgba(0,255,100,0.03);
-            border: 1px solid rgba(0,255,100,0.2);
-            border-radius: 20px;
-            padding: 2rem;
-            backdrop-filter: blur(10px);
-            transition: 0.3s;
-        }
-        .skill-card:hover {
-            border-color: var(--neon);
-            box-shadow: 0 0 30px rgba(0,255,100,0.3);
-            transform: translateY(-5px);
-        }
-        .skill-card h3 {
-            font-family: var(--mono);
-            color: var(--neon);
-            margin-bottom: 1.2rem;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            font-size: 1.5rem;
-        }
-        .skill-list { list-style: none; }
-        .skill-list li {
-            padding: 8px 0;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            font-size: 1rem;
-        }
-        .skill-list li i { color: var(--neon2); font-size: 0.9rem; }
-
-        /* PROJECTS */
-        .project-grid {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 2rem;
-        }
-        .project-card {
-            background: rgba(0,0,0,0.5);
-            border: 1px solid rgba(0,255,100,0.3);
-            border-radius: 20px;
-            padding: 2rem;
-            display: flex;
-            gap: 2rem;
-            align-items: center;
-            backdrop-filter: blur(10px);
-            transition: 0.3s;
-        }
-        .project-card:hover {
-            border-color: var(--neon2);
-            box-shadow: 0 0 25px rgba(0,204,255,0.3);
-        }
-        .project-icon {
-            font-size: 4rem;
-            color: var(--neon);
-            min-width: 80px;
-            text-align: center;
-        }
-        .project-info h3 {
-            color: var(--neon);
-            margin-bottom: 10px;
-            font-family: var(--mono);
-            font-size: 1.5rem;
-        }
-
-        /* GALLERY */
-        .gallery-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-            gap: 1.5rem;
-            margin-top: 2rem;
-        }
-        .gallery-item {
-            aspect-ratio: 1/1;
-            background: rgba(255,255,255,0.03);
-            border: 1px dashed rgba(0,255,100,0.5);
-            border-radius: 15px;
-            overflow: hidden;
-            transition: 0.3s;
-            position: relative;
-        }
-        .gallery-item img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            transition: 0.4s;
-        }
-        .gallery-item:hover {
-            border-color: var(--neon);
-            box-shadow: 0 0 25px rgba(0,255,100,0.4);
-            transform: scale(1.02);
-        }
-
-        /* CONTACT */
-        .contact-flex {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 2rem;
-        }
-        .contact-item {
-            background: rgba(255,255,255,0.02);
-            border: 1px solid rgba(0,255,100,0.2);
-            border-radius: 20px;
-            padding: 2rem;
-            text-align: center;
-            width: 250px;
-            backdrop-filter: blur(5px);
-            transition: 0.3s;
-        }
-        .contact-item:hover {
-            border-color: var(--neon);
-            box-shadow: 0 0 30px rgba(0,255,100,0.3);
-            transform: translateY(-5px);
-        }
-        .contact-item i,
-        .contact-item .social-svg {
-            font-size: 2.2rem;
-            color: var(--neon);
-            margin-bottom: 1rem;
-        }
-        .contact-item a {
-            color: var(--neon2);
-            text-decoration: none;
-            font-weight: bold;
-            font-family: var(--mono);
-        }
-
-        /* TERMINAL */
-        .terminal-toggle {
-            position: fixed;
-            bottom: 30px;
-            right: 30px;
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            background: #0a0a0a;
-            border: 2px solid var(--neon);
-            color: var(--neon);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.8rem;
-            cursor: pointer;
-            z-index: 1500;
-            box-shadow: 0 0 25px var(--neon);
-            transition: 0.3s;
-        }
-        .terminal-toggle:hover {
-            transform: scale(1.1);
-        }
-        .terminal-window {
-            display: none;
-            position: fixed;
-            bottom: 100px;
-            right: 30px;
-            width: 380px;
-            max-width: 90vw;
-            height: 500px;
-            background: #050505;
-            border: 1px solid var(--neon);
-            border-radius: 15px;
-            z-index: 1500;
-            flex-direction: column;
-            font-family: var(--mono);
-            box-shadow: 0 0 35px rgba(0,255,100,0.5);
-            overflow: hidden;
-        }
-        .term-header {
-            background: #0f0f0f;
-            padding: 12px;
-            border-bottom: 1px solid var(--neon);
-            display: flex;
-            justify-content: space-between;
-            color: var(--neon);
-        }
-        .term-messages {
-            flex: 1;
-            padding: 15px;
-            overflow-y: auto;
-            font-size: 0.9rem;
-        }
-        .term-messages .line {
-            margin-bottom: 10px;
-            word-wrap: break-word;
-        }
-        .term-messages .user {
-            color: var(--neon);
-        }
-        .term-messages .bot {
-            color: #aaa;
-        }
-        .term-input {
-            display: flex;
-            border-top: 1px solid #222;
-        }
-        .term-input input {
-            flex: 1;
-            background: #000;
-            border: none;
-            padding: 14px;
-            color: var(--neon);
-            font-family: var(--mono);
-            outline: none;
-        }
-        .term-input button {
-            background: transparent;
-            border: none;
-            color: var(--neon);
-            padding: 0 18px;
-            cursor: pointer;
-            font-size: 1.2rem;
-        }
-
-        footer {
-            text-align: center;
-            padding: 2rem;
-            border-top: 1px solid rgba(0,255,100,0.15);
-            font-family: var(--mono);
-            color: #555;
-            position: relative;
-            z-index: 1;
-        }
-
-        /* RESPONSIVE */
-        @media (max-width: 768px) {
-            .about-grid {
-                grid-template-columns: 1fr;
-                text-align: center;
-            }
-            .project-card {
-                flex-direction: column;
-                text-align: center;
-            }
-            .nav-links {
-                display: none;
-                flex-direction: column;
-                background: #000;
-                position: absolute;
-                top: 70px;
-                left: 0;
-                width: 100%;
-                padding: 1rem;
-                border-bottom: 1px solid var(--neon);
-            }
-            .nav-links.active {
-                display: flex;
-            }
-            .menu-toggle {
-                display: block;
-            }
-            .glitch {
-                font-size: 3rem;
-            }
-            section {
-                padding: 60px 0;
-            }
-        }
-    </style>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Charles — Electrical Engineering Student</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <canvas id="matrix"></canvas>
+  <header class="site-header">
+    <div class="container header-inner">
+      <div class="brand">
+        <a href="#home" class="logo" data-i18n="name">Charles</a>
+        <button id="lang-switch" class="lang-switch" aria-label="Language switch">FR | EN</button>
+      </div>
 
-    <!-- Navigation -->
-    <nav class="navbar">
-        <div class="logo">> CHARTECH</div>
-        <div class="menu-toggle" id="mobile-menu"><i class="fas fa-bars"></i></div>
-        <ul class="nav-links" id="nav-links">
-            <li><a href="#home">Home</a></li>
-            <li><a href="#about">About</a></li>
-            <li><a href="#skills">Skills</a></li>
-            <li><a href="#projects">Projects</a></li>
-            <li><a href="#gallery">Gallery</a></li>
-            <li><a href="#contact">Contact</a></li>
+      <button id="nav-toggle" class="nav-toggle" aria-label="Open navigation">☰</button>
+
+      <nav class="nav" id="nav">
+        <ul>
+          <li><a href="#home" data-i18n="nav.home">Home</a></li>
+          <li><a href="#about" data-i18n="nav.about">About</a></li>
+          <li><a href="#skills" data-i18n="nav.skills">Skills</a></li>
+          <li><a href="#projects" data-i18n="nav.projects">Projects</a></li>
+          <li><a href="#blacksmith" data-i18n="nav.blacksmith">Blacksmith</a></li>
+          <li><a href="#profile" data-i18n="nav.profile">Profile</a></li>
+          <li><a href="#contact" data-i18n="nav.contact">Contact</a></li>
         </ul>
-    </nav>
-
-    <!-- Hero -->
-    <section id="home">
-        <div class="container hero-content">
-            <h1 class="glitch">CHARTECH</h1>
-            <div class="typing-text" id="typing-text"></div>
-            <div style="margin-top:1.5rem; display: flex; flex-wrap: wrap; justify-content: center; gap: 10px;">
-                <a href="#about" class="btn btn-primary">ENTER SYSTEM</a>
-                <a href="#projects" class="btn">VIEW PROJECTS</a>
-                <button class="btn google-btn" id="google-login-btn">
-                    <i class="fab fa-google"></i> Connect with Google
-                </button>
-            </div>
-        </div>
-    </section>
-
-    <!-- About -->
-    <section id="about">
-        <div class="container">
-            <h2>// WHOAMI</h2>
-            <div class="about-grid">
-                <div class="about-text">
-                    <p>I'm <strong>Charles Technology</strong> – a 16‑year‑old hacker, AI engineer, and hardware anarchist from Bukavu (DRC). I live at the brutal intersection of <strong>code and hardware</strong>. Neural networks, embedded systems, full‑stack apps, and eVTOL aircraft – I build entire ecosystems from scratch, no compromises.</p>
-                    <p>On the digital front, I bend <strong>Python</strong>, <strong>JavaScript</strong>, <strong>C++</strong> and the modern web to my will. On the physical side, I design 3D models in <strong>FreeCAD</strong>, cook circuits with <strong>ESP32, Raspberry Pi and Arduino</strong>, and assemble drones that will one day carry AI into the sky.</p>
-                    <p>My mission is local and industrial: to reinvent technology in my region before exporting it to the world. <strong>Give me a problem, I'll compile a solution.</strong></p>
-                </div>
-                <div class="about-image" style="text-align: center;">
-                    <!-- Replace with your real photo -->
-                    <img src="https://via.placeholder.com/300x300/111/00ff66?text=CT" alt="CHARTECH Hacker" class="profile-img">
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Skills -->
-    <section id="skills">
-        <div class="container">
-            <h2>// SKILLSET</h2>
-            <div class="skills-grid">
-                <div class="skill-card">
-                    <h3><i class="fas fa-terminal"></i> Software & AI</h3>
-                    <ul class="skill-list">
-                        <li><i class="fas fa-chevron-right"></i> Python (Machine Learning, Automation)</li>
-                        <li><i class="fas fa-chevron-right"></i> JavaScript / TypeScript</li>
-                        <li><i class="fas fa-chevron-right"></i> HTML5 / CSS3 / Web Apps</li>
-                        <li><i class="fas fa-chevron-right"></i> Git / GitHub / Firebase</li>
-                    </ul>
-                </div>
-                <div class="skill-card">
-                    <h3><i class="fas fa-microchip"></i> Hardware & IoT</h3>
-                    <ul class="skill-list">
-                        <li><i class="fas fa-chevron-right"></i> ESP32 / Arduino / C++</li>
-                        <li><i class="fas fa-chevron-right"></i> Raspberry Pi & Linux</li>
-                        <li><i class="fas fa-chevron-right"></i> Circuit Design & Sensors</li>
-                        <li><i class="fas fa-chevron-right"></i> FreeCAD (3D Modeling)</li>
-                    </ul>
-                </div>
-                <div class="skill-card">
-                    <h3><i class="fas fa-bolt"></i> Engineering</h3>
-                    <ul class="skill-list">
-                        <li><i class="fas fa-chevron-right"></i> Electrical Installations</li>
-                        <li><i class="fas fa-chevron-right"></i> Drone & eVTOL Design</li>
-                        <li><i class="fas fa-chevron-right"></i> Automation Systems</li>
-                        <li><i class="fas fa-chevron-right"></i> System Troubleshooting</li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Projects -->
-    <section id="projects">
-        <div class="container">
-            <h2>// ACTIVE_PROJECTS</h2>
-            <div class="project-grid">
-                <div class="project-card">
-                    <div class="project-icon"><i class="fas fa-fighter-jet"></i></div>
-                    <div class="project-info">
-                        <h3>CH01 – eVTOL Concept</h3>
-                        <p>Single‑seat electric vertical take‑off and landing aircraft (8 motors). Structural 3D modeling, propulsion configuration, and solar panel integration for secondary systems and flight computers.</p>
-                        <p style="margin-top:10px; color:var(--neon); font-size:0.9rem;">[ STATUS: R&D / 3D MODELING ]</p>
-                    </div>
-                </div>
-                <div class="project-card">
-                    <div class="project-icon"><i class="fas fa-comment-dots"></i></div>
-                    <div class="project-info">
-                        <h3>CH-APP (Web Messenger)</h3>
-                        <p>Real‑time messaging app with AI assistant interface. Built with web technologies and deployed on GitHub Pages. Backend uses Firebase Authentication & Realtime Database to manage users and message streams.</p>
-                        <p style="margin-top:10px; color:var(--neon2); font-size:0.9rem;">[ STATUS: DEPLOYED ]</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Gallery -->
-    <section id="gallery">
-        <div class="container">
-            <h2>// GALLERY</h2>
-            <p style="color:#aaa; margin-bottom:1.5rem; font-family:var(--mono);">Drop your own photos – workbench, drones, circuits, FreeCAD models.</p>
-            <div class="gallery-grid">
-                <div class="gallery-item"><img src="https://via.placeholder.com/400/0a0a0a/00ff66?text=Drone" alt="Drone"></div>
-                <div class="gallery-item"><img src="https://via.placeholder.com/400/0a0a0a/00ff66?text=Arduino" alt="Arduino"></div>
-                <div class="gallery-item"><img src="https://via.placeholder.com/400/0a0a0a/00ff66?text=FreeCAD" alt="FreeCAD"></div>
-                <div class="gallery-item"><img src="https://via.placeholder.com/400/0a0a0a/00ff66?text=Code" alt="Code"></div>
-                <div class="gallery-item"><img src="https://via.placeholder.com/400/0a0a0a/00ff66?text=Electronics" alt="Electronics"></div>
-                <div class="gallery-item"><img src="https://via.placeholder.com/400/0a0a0a/00ff66?text=Setup" alt="Setup"></div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Contact -->
-    <section id="contact">
-        <div class="container">
-            <h2>// ESTABLISH_CONNECTION</h2>
-            <div class="contact-flex">
-                <div class="contact-item">
-                    <i class="fas fa-envelope"></i>
-                    <p><strong>Email</strong></p>
-                    <a href="mailto:charlestechnology46@gmail.com">Direct Email</a>
-                </div>
-                <div class="contact-item">
-                    <i class="fab fa-whatsapp"></i>
-                    <p><strong>WhatsApp</strong></p>
-                    <a href="https://wa.me/243892959679" target="_blank">Chat Now</a>
-                </div>
-                <div class="contact-item">
-                    <i class="fab fa-github"></i>
-                    <p><strong>GitHub</strong></p>
-                    <a href="https://github.com/chartech2024-web" target="_blank">@chartech2024-web</a>
-                </div>
-                <div class="contact-item">
-                    <i class="fab fa-linkedin"></i>
-                    <p><strong>LinkedIn</strong></p>
-                    <a href="https://linkedin.com/in/yourprofile" target="_blank">Profile</a>
-                </div>
-                <div class="contact-item">
-                    <svg class="social-svg" viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="var(--neon)" stroke-width="2">
-                        <circle cx="12" cy="12" r="10"/>
-                        <path d="M8 16 L12 6 L16 16 M9 12 L15 12"/>
-                    </svg>
-                    <p><strong>Truth Social</strong></p>
-                    <a href="https://truthsocial.com/@yourhandle" target="_blank">@yourhandle</a>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <footer>
-        <p>© 2026 CHARTECH | Powered by logic, electricity & neon dreams.</p>
-    </footer>
-
-    <!-- Terminal -->
-    <div class="terminal-toggle" id="term-toggle"><i class="fas fa-terminal"></i></div>
-    <div class="terminal-window" id="term-window">
-        <div class="term-header">
-            <span>root@chartech:~#</span>
-            <i class="fas fa-times" id="close-term" style="cursor:pointer;"></i>
-        </div>
-        <div class="term-messages" id="term-messages">
-            <div class="line bot">CHARTECH AI v2.0 – Type 'help' to begin.</div>
-        </div>
-        <div class="term-input">
-            <input type="text" id="user-input" placeholder="Command, math, message...">
-            <button id="send-term"><i class="fas fa-arrow-right"></i></button>
-        </div>
+      </nav>
     </div>
+  </header>
 
-    <!-- Firebase (Google Auth) -->
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getAuth, signInWithPopup, GoogleAuthProvider } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+  <main>
+    <section id="home" class="hero section">
+      <div class="container hero-inner reveal">
+        <div class="hero-text">
+          <h1 data-i18n="hero.title">Charles</h1>
+          <p class="role" data-i18n="hero.role">Electrical Engineering Student & Technology Enthusiast</p>
+          <p class="intro" data-i18n="hero.intro">I am a student passionate about electricity, electronics, programming and technology. I enjoy learning by building practical projects and finding technological solutions to real problems.</p>
 
-        const firebaseConfig = {
-            apiKey: "AIzaSyCvQXxa242NZWeqvF7enoyOG6AOP6SJMjw",
-            authDomain: "site-web-f03cf.firebaseapp.com",
-            projectId: "site-web-f03cf",
-            storageBucket: "site-web-f03cf.firebasestorage.app",
-            messagingSenderId: "346351710335",
-            appId: "1:346351710335:web:29eea2205219390c05cf4a"
-        };
+          <div class="hero-actions">
+            <a href="#about" class="btn" data-i18n="hero.about">About Me</a>
+            <a href="#contact" class="btn btn-outline" data-i18n="hero.contact">Contact</a>
+          </div>
+        </div>
+        <div class="hero-img">
+          <img src="assets/profile.jpg" alt="Charles profile photo">
+        </div>
+      </div>
+    </section>
 
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-        const provider = new GoogleAuthProvider();
+    <section id="about" class="section about reveal">
+      <div class="container">
+        <h2 data-i18n="about.title">About Me</h2>
+        <p data-i18n="about.bio">I am studying electrical engineering with a strong interest in electronics, programming and technology. I learn through practical projects and experiments. I am also a member of Blacksmith, an initiative focused on community development and environmental challenges.</p>
+      </div>
+    </section>
 
-        document.getElementById('google-login-btn').addEventListener('click', () => {
-            signInWithPopup(auth, provider)
-                .then((result) => {
-                    alert(`Welcome, ${result.user.displayName}!`);
-                })
-                .catch((error) => {
-                    alert("Login failed: " + error.message);
-                });
-        });
-    </script>
+    <section id="skills" class="section skills reveal">
+      <div class="container">
+        <h2 data-i18n="skills.title">Skills</h2>
+        <div class="cards">
+          <div class="card">
+            <h3 data-i18n="skills.ee.title">Electrical Engineering</h3>
+            <ul>
+              <li data-i18n="skills.ee.item1">Electrical systems</li>
+              <li data-i18n="skills.ee.item2">Electronics</li>
+              <li data-i18n="skills.ee.item3">Basic electrical design</li>
+              <li data-i18n="skills.ee.item4">Practical experimentation</li>
+            </ul>
+          </div>
 
-    <script>
-        // ---------- MATRIX RAIN ----------
-        const canvas = document.getElementById('matrix');
-        const ctx = canvas.getContext('2d');
-        function resizeCanvas() {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-        }
-        window.addEventListener('resize', resizeCanvas);
-        resizeCanvas();
-        const chars = '01アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホ';
-        const charArr = chars.split('');
-        const fontSize = 14;
-        let columns, drops;
-        function initMatrix() {
-            columns = Math.floor(canvas.width / fontSize);
-            drops = Array(columns).fill(1);
-        }
-        initMatrix();
-        function drawMatrix() {
-            ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
-            ctx.fillStyle = '#00ff66';
-            ctx.font = fontSize + 'px monospace';
-            for (let i = 0; i < drops.length; i++) {
-                const text = charArr[Math.floor(Math.random() * charArr.length)];
-                ctx.fillText(text, i * fontSize, drops[i] * fontSize);
-                if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
-                    drops[i] = 0;
-                }
-                drops[i]++;
-            }
-        }
-        setInterval(drawMatrix, 50);
-        window.addEventListener('resize', initMatrix);
+          <div class="card">
+            <h3 data-i18n="skills.prog.title">Programming</h3>
+            <ul>
+              <li>Python</li>
+              <li>C / C++</li>
+              <li>JavaScript</li>
+              <li>HTML</li>
+              <li>CSS</li>
+            </ul>
+          </div>
 
-        // ---------- MOBILE MENU ----------
-        document.getElementById('mobile-menu').addEventListener('click', () => {
-            document.getElementById('nav-links').classList.toggle('active');
-        });
-        document.querySelectorAll('.nav-links a').forEach(link => {
-            link.addEventListener('click', () => document.getElementById('nav-links').classList.remove('active'));
-        });
+          <div class="card">
+            <h3 data-i18n="skills.tech.title">Technology</h3>
+            <ul>
+              <li>Arduino</li>
+              <li>ESP32</li>
+              <li>Git</li>
+              <li>GitHub</li>
+              <li>Linux / Ubuntu</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
 
-        // ---------- TYPING EFFECT ----------
-        const typingEl = document.getElementById('typing-text');
-        const phrases = [
-            "Hack the hardware. Engineer the AI.",
-            "From neurons to drones – I build it all.",
-            "Turning coffee and electricity into code."
-        ];
-        let phraseIdx = 0, charIdx = 0, deleting = false;
-        function type() {
-            const full = phrases[phraseIdx];
-            if (!deleting) {
-                typingEl.innerHTML = full.substring(0, charIdx + 1) + '<span class="cursor">|</span>';
-                charIdx++;
-                if (charIdx === full.length) {
-                    deleting = true;
-                    setTimeout(type, 2000);
-                    return;
-                }
-            } else {
-                typingEl.innerHTML = full.substring(0, charIdx - 1) + '<span class="cursor">|</span>';
-                charIdx--;
-                if (charIdx === 0) {
-                    deleting = false;
-                    phraseIdx = (phraseIdx + 1) % phrases.length;
-                }
-            }
-            setTimeout(type, deleting ? 30 : 80);
-        }
-        type();
+    <section id="projects" class="section projects reveal">
+      <div class="container">
+        <h2 data-i18n="projects.title">Projects & Activities</h2>
+        <div class="list">
+          <article class="item">
+            <h3 data-i18n="projects.elec.title">Electronics and programming experiments</h3>
+            <p data-i18n="projects.elec.desc">Hands-on experiments combining circuits and microcontrollers to learn practical electronics and embedded programming.</p>
+          </article>
 
-        // ---------- SMART TERMINAL (with secret email sending) ----------
-        const termToggle = document.getElementById('term-toggle');
-        const termWindow = document.getElementById('term-window');
-        const closeTerm = document.getElementById('close-term');
-        const termMessages = document.getElementById('term-messages');
-        const userInput = document.getElementById('user-input');
-        const sendTerm = document.getElementById('send-term');
+          <article class="item">
+            <h3 data-i18n="projects.robotics.title">Robotics and embedded systems</h3>
+            <p data-i18n="projects.robotics.desc">Small robotics and embedded projects using platforms like Arduino and ESP32 to explore control and sensors.</p>
+          </article>
 
-        termToggle.addEventListener('click', () => termWindow.style.display = 'flex');
-        closeTerm.addEventListener('click', () => termWindow.style.display = 'none');
+          <article class="item">
+            <h3 data-i18n="projects.community.title">Environmental & community activities</h3>
+            <p data-i18n="projects.community.desc">Activities with Blacksmith focused on community development and environmental challenges.</p>
+          </article>
+        </div>
+      </div>
+    </section>
 
-        function addTermLine(text, cls) {
-            const line = document.createElement('div');
-            line.className = 'line ' + cls;
-            line.textContent = text;
-            termMessages.appendChild(line);
-            termMessages.scrollTop = termMessages.scrollHeight;
-        }
+    <section id="blacksmith" class="section blacksmith reveal">
+      <div class="container">
+        <h2>Blacksmith</h2>
+        <p data-i18n="blacksmith.desc">I am a member of Blacksmith. The initiative focuses on community development and environmental challenges.</p>
+      </div>
+    </section>
 
-        // Knowledge base
-        const knowledge = {
-            name: 'Charles Technology (CHARTECH)',
-            founder: 'Charles, 16, from Bukavu (DRC)',
-            email: 'charlestechnology46@gmail.com',
-            phone: '+243 892 959 679',
-            whatsapp: 'https://wa.me/243892959679',
-            linkedin: 'https://linkedin.com/in/yourprofile',
-            truth: 'https://truthsocial.com/@yourhandle',
-            github: 'https://github.com/chartech2024-web',
-            about: 'CHARTECH is a hacker/AI initiative merging neural networks, electronics, drones, and full‑stack development.',
-            skills: 'Python, JavaScript, C++, FreeCAD, ESP32, Raspberry Pi, Firebase, electrical installations, drone design.',
-            projects: 'Currently: CH01 (eVTOL 8‑motor concept) and CH‑APP (real‑time messenger with AI).',
-            location: 'Bukavu, Democratic Republic of the Congo.',
-            vision: 'Build local tech before going global.'
-        };
+    <section id="profile" class="section profile reveal">
+      <div class="container profile-inner">
+        <div class="profile-photo">
+          <img src="assets/profile.jpg" alt="Charles profile photo">
+        </div>
+        <div class="profile-info">
+          <h2 data-i18n="profile.title">Profile</h2>
+          <p data-i18n="profile.text">Student → Learner → Builder → Future Engineer</p>
+        </div>
+      </div>
+    </section>
 
-        // Safe math evaluator
-        function safeMathEval(expr) {
-            const sanitized = expr.replace(/\s/g, '').replace(/\^/g, '**');
-            if (!/^[0-9+\-*/.()eE**]+$/.test(sanitized)) {
-                if (/^[0-9+\-*/.()eEMath.]+$/.test(sanitized) && /^(Math\.)?(sin|cos|tan|sqrt|log|pow|PI|E|abs|floor|ceil|round)/.test(sanitized)) {
-                    // allowed
-                } else {
-                    return null;
-                }
-            }
-            try {
-                const result = Function('"use strict"; return (' + sanitized + ')')();
-                if (typeof result === 'number' && isFinite(result)) return result;
-            } catch (e) {}
-            return null;
-        }
+    <section id="contact" class="section contact reveal">
+      <div class="container">
+        <h2 data-i18n="contact.title">Contact</h2>
+        <p data-i18n="contact.intro">Use the placeholders below to add real contact details later.</p>
+        <ul class="contact-list">
+          <li>Email: <a href="#" class="placeholder">your.email@example.com</a></li>
+          <li>GitHub: <a href="#" class="placeholder">github.com/your-username</a></li>
+          <li>LinkedIn: <a href="#" class="placeholder">linkedin.com/in/your-profile</a></li>
+        </ul>
+      </div>
+    </section>
+  </main>
 
-        function isMathQuery(input) {
-            const lower = input.toLowerCase().trim();
-            if (lower.startsWith('calcule') || lower.startsWith('calcul') || lower.startsWith('solve') || lower.startsWith('compute') || lower.startsWith('math')) return true;
-            if (/^[0-9+\-*/(].*/.test(lower)) return true;
-            if (/^[\d\s+\-*/().^%]+$/.test(lower) && /[\d]/.test(lower)) return true;
-            return false;
-        }
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <p>© <span id="year">2026</span> Charles. All rights reserved.</p>
+    </div>
+  </footer>
 
-        function extractMathExpr(input) {
-            return input.replace(/^(calcule|calcul|solve|compute|math|what is)\s*/i, '').trim();
-        }
+  <!-- Site Assistant (small, optional, predefined answers) -->
+  <div id="assistant" class="assistant">
+    <button id="assistant-toggle" class="assistant-toggle" aria-label="Open site assistant">Assistant</button>
+    <div id="assistant-panel" class="assistant-panel" hidden>
+      <div class="assistant-header">
+        <strong data-i18n="assistant.title">Site Assistant</strong>
+        <button id="assistant-close" aria-label="Close">✕</button>
+      </div>
+      <div class="assistant-body">
+        <ul class="assistant-qa">
+          <li><button class="qa-btn" data-q="who" data-i18n="assistant.who">Who is Charles?</button></li>
+          <li><button class="qa-btn" data-q="study" data-i18n="assistant.study">What does Charles study?</button></li>
+          <li><button class="qa-btn" data-q="skills" data-i18n="assistant.skills">What are his skills?</button></li>
+          <li><button class="qa-btn" data-q="blacksmith" data-i18n="assistant.blacksmith">What is Blacksmith?</button></li>
+          <li><button class="qa-btn" data-q="contact" data-i18n="assistant.contact">How can I contact Charles?</button></li>
+        </ul>
+        <div id="assistant-answer" class="assistant-answer" aria-live="polite"></div>
+      </div>
+    </div>
+  </div>
 
-        // Email sending via Formspree (replace with your form ID)
-        const FORMSPREE_ENDPOINT = 'https://formspree.io/f/your-form-id';  // <-- PUT YOUR FORM ID HERE
-
-        function sendEmailToAdmin(messageBody) {
-            // We create a hidden form and submit it
-            const form = document.createElement('form');
-            form.action = FORMSPREE_ENDPOINT;
-            form.method = 'POST';
-            form.style.display = 'none';
-            const msgField = document.createElement('input');
-            msgField.name = 'message';
-            msgField.value = `[CHARTECH AI message] ${messageBody}`;
-            form.appendChild(msgField);
-            // Optional: add email field if needed, but Formspree can capture it later
-            document.body.appendChild(form);
-            form.submit();
-            document.body.removeChild(form);
-            return true;
-        }
-
-        // State for the email flow
-        let awaitingMessage = false;
-
-        function processCommand(cmd) {
-            addTermLine('> ' + cmd, 'user');
-            const lower = cmd.trim().toLowerCase();
-
-            // If we are in "email admin" flow
-            if (awaitingMessage) {
-                // User has typed the message content
-                if (lower === 'cancel') {
-                    awaitingMessage = false;
-                    addTermLine('Email sending cancelled.', 'bot');
-                    userInput.value = '';
-                    return;
-                }
-                const sent = sendEmailToAdmin(cmd);
-                if (sent) {
-                    addTermLine('✅ Message sent to admin successfully.', 'bot');
-                    addTermLine('(If you have not configured Formspree, replace the FORMSPREE_ENDPOINT with your form ID.)', 'bot');
-                } else {
-                    addTermLine('❌ Failed to send. Check the Formspree endpoint.', 'bot');
-                }
-                awaitingMessage = false;
-                userInput.value = '';
-                return;
-            }
-
-            // Secret command: "send admin" or "email admin"
-            if (lower === 'send admin' || lower === 'email admin' || lower === 'send email to admin') {
-                addTermLine('Enter the message you want to send to the admin:', 'bot');
-                addTermLine('(type "cancel" to abort)', 'bot');
-                awaitingMessage = true;
-                userInput.value = '';
-                return;
-            }
-
-            // Help
-            if (lower === 'help' || lower === 'aide') {
-                addTermLine("Commands: about, skills, projects, contact, email, phone, linkedin, truth, github, location, vision, founder.", 'bot');
-                addTermLine("Math: type any expression (2+2, sin(0.5)*10, 15*8, etc.)", 'bot');
-                addTermLine("Secret: 'send admin' to email me directly.", 'bot');
-                addTermLine("'clear' to wipe the terminal.", 'bot');
-                userInput.value = '';
-                return;
-            }
-
-            // Clear
-            if (lower === 'clear') {
-                termMessages.innerHTML = '';
-                userInput.value = '';
-                return;
-            }
-
-            // Math
-            if (isMathQuery(cmd)) {
-                const expr = extractMathExpr(cmd);
-                const result = safeMathEval(expr);
-                if (result !== null) {
-                    addTermLine(`${expr} = ${result}`, 'bot');
-                } else {
-                    addTermLine("Sorry, I couldn't evaluate that. Check syntax.", 'bot');
-                }
-                userInput.value = '';
-                return;
-            }
-
-            // Knowledge
-            if (lower.includes('about') || lower.includes('who are you')) { addTermLine(knowledge.about, 'bot'); }
-            else if (lower.includes('skills') || lower.includes('competences')) { addTermLine(knowledge.skills, 'bot'); }
-            else if (lower.includes('project') || lower.includes('projets')) { addTermLine(knowledge.projects, 'bot'); }
-            else if (lower.includes('contact')) { addTermLine(`Email: ${knowledge.email}\nWhatsApp: ${knowledge.whatsapp}\nLinkedIn: ${knowledge.linkedin}`, 'bot'); }
-            else if (lower.includes('email') || lower.includes('mail')) { addTermLine(knowledge.email, 'bot'); }
-            else if (lower.includes('phone')) { addTermLine(knowledge.phone, 'bot'); }
-            else if (lower.includes('whatsapp')) { addTermLine(knowledge.whatsapp, 'bot'); }
-            else if (lower.includes('linkedin')) { addTermLine(knowledge.linkedin, 'bot'); }
-            else if (lower.includes('truth social') || lower.includes('truth')) { addTermLine(knowledge.truth, 'bot'); }
-            else if (lower.includes('github')) { addTermLine(knowledge.github, 'bot'); }
-            else if (lower.includes('location') || lower.includes('where are you')) { addTermLine(knowledge.location, 'bot'); }
-            else if (lower.includes('vision')) { addTermLine(knowledge.vision, 'bot'); }
-            else if (lower.includes('founder') || lower.includes('who created')) { addTermLine(knowledge.founder, 'bot'); }
-            else if (lower.includes('name') || lower.includes('who is')) { addTermLine(knowledge.name, 'bot'); }
-            else {
-                addTermLine("I don't understand that yet. Type 'help' for options.", 'bot');
-            }
-            userInput.value = '';
-        }
-
-        sendTerm.addEventListener('click', () => {
-            if (userInput.value.trim()) processCommand(userInput.value.trim());
-        });
-        userInput.addEventListener('keypress', e => {
-            if (e.key === 'Enter' && userInput.value.trim()) processCommand(userInput.value.trim());
-        });
-    </script>
+  <script src="script.js"></script>
 </body>
 </html>
